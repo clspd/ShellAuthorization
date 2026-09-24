@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="accept_license_entries">
+        <item>Accept</item>
+        <item>Decline</item>
+    </string-array>
+    <string-array name="accept_license_values">
+        <item>accept</item>
+        <item>decline</item>
+    </string-array>
+</resources>

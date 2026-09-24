@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/settings_privacy_and_security">
+        <ListPreference
+            app:defaultValue="decline"
+            app:entries="@array/accept_license_entries"
+            app:entryValues="@array/accept_license_values"
+            app:key="accept_license"
+            app:title="@string/accept_license_settings"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            app:key="open_privacy_policy"
+            app:summary="@string/about_this_app_open_privacy"
+            app:title="@string/about_this_app_privacy" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/about">
+        <Preference
+            app:key="about_app"
+            app:summary="@string/about_this_app_open_activity"
+            app:title="@string/about_this_app" />
+
+        <Preference
+            app:key="open_source_license"
+            app:summary="@string/settings_open_source_license_open_activity"
+            app:title="@string/settings_open_source_license" />
+
+        <Preference
+            app:key="permission_explain"
+            app:summary="@string/settings_permission_explain_open_activity"
+            app:title="@string/settings_permission_explain" />
+
+        <Preference
+            app:key="product_main_page"
+            app:summary="@string/about_this_app_open_main_page"
+            app:title="@string/about_this_app_product_main_page" />
+
+        <Preference
+            app:key="feedback"
+            app:summary="@string/feedback_app_problems"
+            app:title="@string/feedback" />
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>
