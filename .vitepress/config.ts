@@ -10,21 +10,24 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Introduction', link: '/introduction' },
+      { text: 'Quick Start', link: '/quick-start' },
+      { text: 'Downloads', link: '/downloads' }
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: 'Guide',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Introduction', link: '/introduction' },
+          { text: 'Quick Start', link: '/quick-start' },
+          { text: 'Downloads', link: '/downloads' }
         ]
       }
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/clspd/ShellAuthorization' }
     ]
   }
 })

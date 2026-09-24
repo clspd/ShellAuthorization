@@ -8,11 +8,14 @@ hero:
   tagline: My great project tagline
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Quick start
+      link: /quick-start
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Downloads
+      link: /downloads
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/clspd/ShellAuthorization
 
 features:
   - title: Feature A
@@ -22,4 +25,3 @@ features:
   - title: Feature C
     details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
 ---
-
