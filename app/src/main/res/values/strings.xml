@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Shell Authorization</string>
-    <string name="title_activity_license">LicenseActivity</string>
+    <string name="title_activity_license">License</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -34,4 +34,15 @@
     <string name="about_this_app_open_main_page">Open Product Homepage</string>
     <string name="feedback">Feedback</string>
     <string name="feedback_app_problems">Feedback problems of the application</string>
+    <string name="learn_more_button">Learn More</string>
+    <string name="a11y_app_icon">The icon of the application.</string>
+    <string name="activity_name_launcher">Launcher</string>
+    <string name="how_did_u_get_here_lol">How did you get here? \nlol :D</string>
+    <string name="title_product_homepage">Product Homepage</string>
+    <string name="click_to_close_the_page">Click to close the page</string>
+    <string name="click_to_open_product_homepage">Click to open product homepage</string>
+    <string name="cannot_open_page">Cannot open page</string>
+    <string name="accept_button">Accept</string>
+    <string name="decline_button">Decline</string>
+    <string name="loading_text">Loading...</string>
 </resources>

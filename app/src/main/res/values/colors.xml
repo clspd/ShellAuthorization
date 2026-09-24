@@ -37,4 +37,6 @@
     <color name="outline_variant">#FFC3C6CF</color>
 
     <color name="primary_inverse">#FFB4BCD0</color>
+    
+    <color name="backdrop_background">#80000000</color>
 </resources>
