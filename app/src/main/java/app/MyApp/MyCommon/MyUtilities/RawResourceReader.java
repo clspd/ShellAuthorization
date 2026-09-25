@@ -1,4 +1,4 @@
-package app.MyApp.MyShellAuthorization.MyUtility;
+package app.MyApp.MyCommon.MyUtilities;
 
 import android.content.Context;
 

@@ -32,6 +32,12 @@
         <item name="colorOnSurfaceInverse">@color/on_surface_inverse</item>
         <item name="colorPrimaryInverse">@color/primary_inverse</item>
 
+        <item name="colorSurfaceContainerLowest">@color/surface_container_lowest</item>
+        <item name="colorSurfaceContainerLow">@color/surface_container_low</item>
+        <item name="colorSurfaceContainer">@color/surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_container_high</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_container_highest</item>
+
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outline_variant</item>
 
@@ -40,18 +46,20 @@
 
     <style name="Theme.ShellAuthorization" parent="Base.Theme.ShellAuthorization" />
 
+    <style name="Theme.ShellAuthorization.NoActionBar" parent="Base.Theme.ShellAuthorization" />
+
     <style name="Theme.ShellAuthorization.ActionBar" parent="Base.Theme.ShellAuthorization">
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">false</item>
     </style>
 
-    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Transparent" parent="Theme.ShellAuthorization.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Backdrop" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Backdrop" parent="Theme.ShellAuthorization.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/backdrop_background</item>
 

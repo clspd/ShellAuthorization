@@ -15,8 +15,8 @@ android {
         applicationId = "top.clspd.shellauthorization"
         minSdk = 28
         targetSdk = 37
-        versionCode = 3
-        versionName = "0.0.0-alpha.3"
+        versionCode = 4
+        versionName = "0.0.0-alpha.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        externalNativeBuild {
@@ -44,9 +44,10 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
             signingConfig = signingConfigs.getByName("release")
+            optimization {
+                enable = true
+            }
         }
     }
     compileOptions {

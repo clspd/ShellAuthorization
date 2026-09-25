@@ -1,8 +1,12 @@
 package app.MyApp.MyShellAuthorization.LawAndCopyright;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,13 +31,7 @@ public class OpenSourceLicensesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_open_source_licenses);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            int actionBarHeight = 0;
-            android.util.TypedValue tv = new android.util.TypedValue();
-            if (getTheme().resolveAttribute(androidx.appcompat.R.attr.actionBarSize, tv, true)) {
-                actionBarHeight = android.util.TypedValue.complexToDimensionPixelSize(
-                        tv.data, getResources().getDisplayMetrics());
-            }
-            v.setPadding(systemBars.left, systemBars.top + actionBarHeight, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
         if (getSupportActionBar() != null) {
@@ -45,7 +43,18 @@ public class OpenSourceLicensesActivity extends AppCompatActivity {
         w.getSettings().setDomStorageEnabled(true);
         w.getSettings().setMediaPlaybackRequiresUserGesture(false);
         w.getSettings().setAllowContentAccess(true);
-        w.loadData(readRawResource(R.raw.open_source_licenses_document), "text/html", "utf-8");
+        w.loadDataWithBaseURL("http://127.0.0.1/", readRawResource(R.raw.open_source_licenses_document), "text/html", "utf-8", null);
+        w.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
+                if (url.startsWith("https://close-page.com/")) {
+                    finish();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override

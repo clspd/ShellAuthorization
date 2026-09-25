@@ -41,8 +41,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="app.MyApp.MyShellAuthorization.MyPage.MainPage"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -61,7 +61,6 @@
             android:configChanges="orientation|screenSize|screenLayout|uiMode|keyboardHidden"
             android:exported="false"
             android:label="@string/settings_open_source_license"
-            android:theme="@style/Theme.ShellAuthorization.ActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="app.MyApp.MyShellAuthorization.LawAndCopyright.ProductPageOverlayActivity"
@@ -73,7 +72,6 @@
             android:name="app.MyApp.MyShellAuthorization.LawAndCopyright.PermissionExplanationActivity"
             android:exported="false"
             android:label="@string/settings_permission_explain"
-            android:theme="@style/Theme.ShellAuthorization.ActionBar"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="app.MyApp.MyShellAuthorization.LawAndCopyright.LicenseViewerActivity"
@@ -84,6 +82,19 @@
             android:name="app.MyApp.MyShellAuthorization.MyPage.UserFirstUseLicenseShowActivity"
             android:exported="false"
             android:label="@string/license_dialog_title"
+            android:theme="@style/Theme.Backdrop"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="app.MyApp.MyCommon.MySupport.MyFragmentContainer.FragmentContainerActivity"
+            android:exported="false"
+            android:configChanges=""
+            android:label="@string/fragment_container_label"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="app.MyApp.MyCommon.MySupport.MyFragmentContainer.FragmentDialogContainerActivity"
+            android:exported="false"
+            android:configChanges=""
+            android:label="@string/fragment_container2_label"
             android:theme="@style/Theme.Backdrop"
             android:windowSoftInputMode="adjustResize" />
     </application>

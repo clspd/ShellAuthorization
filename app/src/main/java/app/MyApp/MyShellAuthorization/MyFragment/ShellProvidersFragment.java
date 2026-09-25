@@ -8,7 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
+import app.MyApp.MyCommon.MySupport.MyFragmentContainer.FragmentDialogContainerActivity;
 import top.clspd.shellauthorization.R;
 
 /**
@@ -42,5 +46,15 @@ public class ShellProvidersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_shell_providers, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        view.findViewById(R.id.floatingActionButton_addShellProvider).setOnClickListener(v -> {
+            startActivity(FragmentDialogContainerActivity.createIntent(requireContext(), AddShellProviderFragment.class, new Bundle(),
+                    AddShellProviderFragment.getTitle(requireContext()), false));
+        });
     }
 }

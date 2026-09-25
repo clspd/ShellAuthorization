@@ -1,3 +1,6 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="app_fragment_dialog_padding_size">16dp</dimen>
+    <dimen name="app_fragment_dialog_margin_size">24dp</dimen>
+    <dimen name="app_fragment_dialog_border_radius">10dp</dimen>
 </resources>

@@ -34,23 +34,26 @@ JNIEXPORT jint JNICALL
 Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_AntiTamper_AntiTamper_1ComputeValue2(
         JNIEnv *env, jclass clazz, jint type, jint input, jint input2) {
     switch (type) {
+        case 3:
+            kill(getpid(), 9);
+            break;
+        case 0x666:
+            if (!(input2 + input - 3)) return 0x888;
+            break;
+        case 0x131a2597:
+            if (type - input2 > 0x10203040) return input2 ^ (type + input);
+            break;
+        case 0x131a4235:
+            state1 -= type | input;
+            return state1 + 3;
         case 0x231841da:
             if (input / 0x51274 == input2 * 0x12) return 0;
             break;
         case 0x28a92adf:
             if (input2 == ((input & 0x123124) + 1)) return input2 * 2;
             break;
-        case 3:
-            kill(getpid(), 9);
-            break;
-        case 0x131a4235:
-            state1 -= type | input;
-            return state1 + 3;
-        case 0x131a2597:
-            if (type - input2 > 0x10203040) return input2 ^ (type + input);
-            break;
-        case 0x666:
-            if (!(input2 + input - 3)) return 0x888;
+        case 0x3a92acdb:
+            if ((input2 & type) == input) return state1 - 9 * input;
             break;
         case 0x7912dfa1:
             if (state1 - input2 == input) return getpid();

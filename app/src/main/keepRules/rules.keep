@@ -10,3 +10,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+# Add project specific ProGuard rules here.
+-dontobfuscate
+-keepattributes SourceFile,LineNumberTable
+
+-keep class * extends androidx.fragment.app.Fragment { *; }

@@ -39,7 +39,7 @@
     <string name="activity_name_launcher">Launcher</string>
     <string name="how_did_u_get_here_lol">How did you get here? \nlol :D</string>
     <string name="title_product_homepage">Product Homepage</string>
-    <string name="click_to_close_the_page">Click to close the page</string>
+    <string name="click_to_close_the_page">close the page</string>
     <string name="click_to_open_product_homepage">Click to open product homepage</string>
     <string name="cannot_open_page">Cannot open page</string>
     <string name="accept_button">Accept</string>
@@ -64,4 +64,8 @@
     <string name="Cancel">Cancel</string>
     <string name="uninstall_the_app_confirm">Are you sure you want to uninstall this application?\nThis is unrevertable and all of your configurations will be lost.</string>
     <string name="i_see">I see</string>
+    <string name="fragment_container_label">Fragment Container Page</string>
+    <string name="fragment_container2_label">Fragment Dialog Container Page</string>
+    <string name="fragment_add_shell_provider_title">Add shell provider</string>
+    <string name="Close">Close</string>
 </resources>

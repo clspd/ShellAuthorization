@@ -23,6 +23,7 @@
     <p>
         <a href="#" onclick="expand(); return false">[Expand All]</a>
         <a href="#" onclick="collapse(); return false">[Collapse All]</a>
+        <a href="https://close-page.com/">[Close]</a>
     </p>
 
     <main>
