@@ -30,7 +30,7 @@ public class AppNativeStartupInitialization {
         Log.d("AppNativeStartupInitialization", "nativeLib = " + app.nativeLibraryDir);
         int error = new AppNativeStartupInitialization().DoInitialize(
                 new File(app.nativeLibraryDir, "libshellauthorization.so").getAbsolutePath(),
-                new File(app.nativeLibraryDir, "libsa.so").getAbsolutePath(),
+                new File(app.nativeLibraryDir, "libshellauthorizationcore.so").getAbsolutePath(),
                 app.sourceDir,
                 myDataDir.getAbsolutePath()
         );

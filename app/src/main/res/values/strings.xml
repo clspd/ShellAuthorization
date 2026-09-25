@@ -45,4 +45,23 @@
     <string name="accept_button">Accept</string>
     <string name="decline_button">Decline</string>
     <string name="loading_text">Loading...</string>
+    <string name="license_dialog_title">License</string>
+    <string name="license_dialog_content">You need to accept the user agreement and privacy policy to use the application.</string>
+    <string name="license_dialog_user_license">User agreement</string>
+    <string name="license_dialog_privacy_policy">Privacy policy</string>
+    <string name="license_dialog_accept_all">Accept all</string>
+    <string name="license_dialog_decline">Decline</string>
+    <string name="main_page_bottom_nav_shells">Shells</string>
+    <string name="fragment_shells_title">Shells</string>
+    <string name="app_prefs_others">Others</string>
+    <string name="close_the_app_now">Close the application now</string>
+    <string name="close_the_app">Close the application</string>
+    <string name="uninstall_the_app_now">Uninstall the application now</string>
+    <string name="uninstall_the_app">Uninstall the application</string>
+    <string name="are_you_sure_ask">Are you sure?</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="Cancel">Cancel</string>
+    <string name="uninstall_the_app_confirm">Are you sure you want to uninstall this application?\nThis is unrevertable and all of your configurations will be lost.</string>
+    <string name="i_see">I see</string>
 </resources>

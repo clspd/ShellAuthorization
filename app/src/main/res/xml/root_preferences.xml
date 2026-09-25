@@ -41,4 +41,15 @@
             app:summary="@string/feedback_app_problems"
             app:title="@string/feedback" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/app_prefs_others">
+        <Preference
+            app:key="close_app"
+            app:summary="@string/close_the_app_now"
+            app:title="@string/close_the_app" />
+        <Preference
+            app:key="uninstall_app"
+            app:summary="@string/uninstall_the_app_now"
+            app:title="@string/uninstall_the_app" />
+    </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

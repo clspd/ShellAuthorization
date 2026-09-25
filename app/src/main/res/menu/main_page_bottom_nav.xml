@@ -7,6 +7,10 @@
         android:icon="@drawable/ic_action_home"
         android:title="@string/main_page_bottom_nav_homepage" />
     <item
+        android:id="@+id/main_page_bottom_nav_shells"
+        android:icon="@drawable/ic_action_computer"
+        android:title="@string/main_page_bottom_nav_shells" />
+    <item
         android:id="@+id/main_page_bottom_nav_apps"
         android:icon="@drawable/ic_action_apps"
         android:title="@string/main_page_bottom_nav_apps" />

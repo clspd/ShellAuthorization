@@ -1,6 +1,9 @@
 package app.MyApp.MyShellAuthorization.LawAndCopyright;
 
+import static app.MyApp.MyShellAuthorization.MyUtility.RawResourceReader.readRawResource;
+
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +11,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
+import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
 import top.clspd.shellauthorization.R;
 
 public class PermissionExplanationActivity extends AppCompatActivity {
@@ -25,6 +34,14 @@ public class PermissionExplanationActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        TextView content = findViewById(R.id.textView_permExplainContent);
+        content.setText(readRawResource(this, R.raw.permission_explanation));
+
+        findViewById(R.id.button).setOnClickListener(v -> {
+            setResult(RESULT_OK);
+            finish();
+        });
     }
 
     @Override
@@ -32,4 +49,5 @@ public class PermissionExplanationActivity extends AppCompatActivity {
         finish();
         return true;
     }
+
 }

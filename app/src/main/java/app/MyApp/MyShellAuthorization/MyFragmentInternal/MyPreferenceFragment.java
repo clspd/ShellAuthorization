@@ -1,5 +1,6 @@
 package app.MyApp.MyShellAuthorization.MyFragmentInternal;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -14,6 +17,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
+import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.SignalSender;
 import app.MyApp.MyShellAuthorization.LawAndCopyright.LicenseViewerActivity;
 import app.MyApp.MyShellAuthorization.LawAndCopyright.OpenSourceLicensesActivity;
 import app.MyApp.MyShellAuthorization.LawAndCopyright.PermissionExplanationActivity;
@@ -28,26 +33,24 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
     private static final String LICENSE_ACCEPT = "accept";
     private static final String LICENSE_DECLINE = "decline";
 
+    private final ActivityResultLauncher<Intent> licenseViewerLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> applyLicenseDecision(result.getResultCode() == Activity.RESULT_OK));
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
         try {
             findPreference("accept_license").setOnPreferenceChangeListener((preference, newValue) -> {
-                boolean accepted = LICENSE_ACCEPT.equals(newValue);
-                appPrefs().edit().putBoolean(LICENSE_ACCEPTED_KEY, accepted).apply();
-                if (!accepted) {
-                    Intent intent = new Intent(requireContext(), LauncherActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                }
+                applyLicenseDecision(LICENSE_ACCEPT.equals(newValue));
                 return true;
             });
 
             findPreference("open_privacy_policy").setOnPreferenceClickListener(preference -> {
                 Intent intent = new Intent(requireContext(), LicenseViewerActivity.class);
                 intent.putExtra("identifier", R.raw.privacypolicy);
-                startActivity(intent);
+                licenseViewerLauncher.launch(intent);
                 return true;
             });
 
@@ -84,9 +87,32 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                 }
                 return true;
             });
+
+            findPreference("close_app").setOnPreferenceClickListener(preference -> {
+                SignalSender.SendSignal(android.os.Process.myPid(), 9);
+                Toast.makeText(requireContext(), "Cannot close the app!!!", Toast.LENGTH_SHORT).show();
+                return true;
+            });
+
+            findPreference("uninstall_app").setOnPreferenceClickListener(preference -> {
+                new android.app.AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.uninstall_the_app))
+                    .setMessage(getString(R.string.uninstall_the_app_confirm))
+                    .setPositiveButton(getString(R.string.Yes), (dialog, which) -> {
+                        Uri packageUri = Uri.parse("package:" + requireContext().getPackageName());
+                        Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
+                        uninstallIntent.setData(packageUri);
+                        uninstallIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        requireContext().startActivity(uninstallIntent, null);
+                    })
+                    .setNegativeButton(getString(R.string.No), (dialog, which) -> {})
+                    .show();
+                return true;
+            });
+
+            AntiTamper.AntiTamper_ValueMustEqual2(2031280033, 15966981, 810247, android.os.Process.myPid());
         }
         catch (NullPointerException ignored) {
-            Toast.makeText(requireContext(), "BAD SETTINGS!!", Toast.LENGTH_SHORT).show();
         }
 
         syncState();
@@ -100,6 +126,16 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
 
     private SharedPreferences appPrefs() {
         return requireContext().getSharedPreferences(getString(R.string.app_prefs_name), Context.MODE_PRIVATE);
+    }
+
+    private void applyLicenseDecision(boolean accepted) {
+        appPrefs().edit().putBoolean(LICENSE_ACCEPTED_KEY, accepted).apply();
+        if (!accepted) {
+            Intent intent = new Intent(requireContext(), LauncherActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+        syncState();
     }
 
     private void syncState() {

@@ -17,3 +17,5 @@ local.properties
 *.jks
 /app/build
 /app/release
+node_modules
+.vitepress/dist

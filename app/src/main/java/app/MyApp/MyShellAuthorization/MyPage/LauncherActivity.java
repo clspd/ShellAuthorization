@@ -1,5 +1,6 @@
 package app.MyApp.MyShellAuthorization.MyPage;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -45,21 +48,19 @@ public class LauncherActivity extends AppCompatActivity {
         finish();
     }
 
-    private void AskAcceptLicense() {
-        // TODO: add legeital real license
-        new android.app.AlertDialog.Builder(this)
-            .setTitle("License")
-            .setMessage("By continue using the application, you agree to the license.")
-            .setCancelable(false)
-            .setPositiveButton("Accept", (dialog, which) -> {
-                prefs.edit().putBoolean("LicenseAccepted", true).apply();
-                Intent intent = new Intent(LauncherActivity.this, MainPage.class);
-                startActivity(intent);
-                finish();
-            })
-            .setNegativeButton("Decline", (dialog, which) -> {
+    private final ActivityResultLauncher<Intent> UFULSALauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() != Activity.RESULT_OK) {
                 finishAffinity();
-            })
-            .show();
+                return;
+            }
+            prefs.edit().putBoolean("LicenseAccepted", true).apply();
+            checkAppState();
+        }
+    );
+    private void AskAcceptLicense() {
+        Intent intent = new Intent(this, UserFirstUseLicenseShowActivity.class);
+        UFULSALauncher.launch(intent);
     }
 }

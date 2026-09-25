@@ -37,12 +37,28 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     android
     log)
 
-add_executable(salib salib.cpp sa_modules.cpp saimpl.cpp)
-set_target_properties(salib PROPERTIES
-        OUTPUT_NAME libsa.so
+add_library(saAntiTamper SHARED sa_antitamper.cpp)
+set_target_properties(saAntiTamper PROPERTIES
+        OUTPUT_NAME satamperprotection # Shared library CANNOT add lib*.so!! Otherwise the name will duplicate
 )
-target_link_libraries(salib
+target_link_libraries(saAntiTamper
         # List libraries link to the target library
         android
         log)
+
+add_executable(salib salib.cpp sa_modules.cpp saimpl.cpp)
+set_target_properties(salib PROPERTIES
+        OUTPUT_NAME libshellauthorizationcore.so
+)
+target_link_libraries(salib
+        # List libraries link to the target library
+)
+
+add_executable(sadaemon sadaemon.cpp)
+set_target_properties(sadaemon PROPERTIES
+        OUTPUT_NAME libsadaemon.so
+)
+target_link_libraries(sadaemon
+        # List libraries link to the target library
+)
 

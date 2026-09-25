@@ -13,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
 import top.clspd.shellauthorization.R;
 
 public class MainPage extends AppCompatActivity {
@@ -37,7 +38,12 @@ public class MainPage extends AppCompatActivity {
         setupBottomNavigation();
         setupViewPager();
 
-        checkStartupConditions();
+        if (!checkStartupConditions()) {
+            finish();
+            return;
+        }
+
+        AntiTamper.AntiTamper_ValueMustWithin2(0x7912dfa1, 2142310, 14634918, 0, android.os.Process.myPid());
     }
 
     private void setupBottomNavigation() {
@@ -62,20 +68,17 @@ public class MainPage extends AppCompatActivity {
     }
 
     private int indexOfMenuItem(int itemId) {
-        if (itemId == R.id.main_page_bottom_nav_homepage) return 0;
-        if (itemId == R.id.main_page_bottom_nav_apps) return 1;
-        if (itemId == R.id.main_page_bottom_nav_templates) return 2;
-        if (itemId == R.id.main_page_bottom_nav_settings) return 3;
-        return -1;
+        return MainPagerAdapter.indexOfMenuItem(itemId);
     }
 
-    private void checkStartupConditions() {
+    private boolean checkStartupConditions() {
         SharedPreferences prefs = getSharedPreferences(getString(R.string.app_prefs_name), MODE_PRIVATE);
         boolean isLicenseAccepted = prefs.getBoolean("LicenseAccepted", false);
         if (!isLicenseAccepted) {
             Intent intent = new Intent(MainPage.this, LauncherActivity.class);
             startActivity(intent);
-            finish();
+            return false;
         }
+        return true;
     }
 }

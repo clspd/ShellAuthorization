@@ -13,17 +13,17 @@ import top.clspd.shellauthorization.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TemplatesFragment#newInstance} factory method to
+ * Use the {@link ShellProvidersFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TemplatesFragment extends Fragment {
+public class ShellProvidersFragment extends Fragment {
 
-    public TemplatesFragment() {
+    public ShellProvidersFragment() {
         // Required empty public constructor
     }
 
-    public static TemplatesFragment newInstance() {
-        TemplatesFragment fragment = new TemplatesFragment();
+    public static ShellProvidersFragment newInstance() {
+        ShellProvidersFragment fragment = new ShellProvidersFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -33,7 +33,7 @@ public class TemplatesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            AntiTamper.AntiTamper_ValueMustWithin2(320480663, 19390801, 20260925, 310088640, 360720960);
+            AntiTamper.AntiTamper_ValueMustEqual2(1638, 938, -935, 2184);
         }
     }
 
@@ -41,6 +41,6 @@ public class TemplatesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_templates, container, false);
+        return inflater.inflate(R.layout.fragment_shell_providers, container, false);
     }
 }

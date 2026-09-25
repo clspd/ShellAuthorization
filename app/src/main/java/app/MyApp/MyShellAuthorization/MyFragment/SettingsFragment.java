@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
 import app.MyApp.MyShellAuthorization.MyFragmentInternal.MyPreferenceFragment;
 import top.clspd.shellauthorization.R;
 
@@ -40,7 +41,9 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {}
+        if (getArguments() != null) {
+            AntiTamper.AntiTamper_ValueMustWithin(0x02, 0xFA, 0x1024, 0x2026);
+        }
     }
 
     @Override
