@@ -1,11 +1,14 @@
 package app.MyApp.MyShellAuthorization.MyFragmentInternal;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -42,6 +45,19 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
         try {
+            findPreference("ignore_bo").setOnPreferenceClickListener(preference -> {
+                PowerManager powerManager = (PowerManager) requireContext().getSystemService(Context.POWER_SERVICE);
+                if (powerManager.isIgnoringBatteryOptimizations(requireContext().getPackageName())) {
+                    Toast.makeText(requireContext(), getString(R.string.ignore_battery_optimization_already), Toast.LENGTH_LONG).show();
+                    return true;
+                }
+                // fuck you google
+                @SuppressLint("BatteryLife") Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + requireContext().getPackageName()));
+                startActivity(intent);
+                return true;
+            });
+
             findPreference("accept_license").setOnPreferenceChangeListener((preference, newValue) -> {
                 applyLicenseDecision(LICENSE_ACCEPT.equals(newValue));
                 return true;

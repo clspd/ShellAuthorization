@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Shell Provider</title>
+    <style type="text/css">
+        .use-language .l {
+            display: none;
+        }
+    </style>
+    <style type="text/css">
+        
+    </style>
+</head>
+<body class="use-language">
+    <script id="supported_langs" type="application/json">["en","zh"]</script>
+
+    <h1 class="l l-en">Please choose one of the following shell providers to continue.</h1>
+    <h1 class="l l-zh">请选择以下 Shell 提供程序之一以继续。</h1>
+
+    <a href="https://commit-form.com/?type=close">
+        <div class="l l-en">Cancel</div>
+        <div class="l l-zh">取消</div>
+    </a>
+
+    <div id="cards">
+        <div class="card">
+            <div class="icon">
+                <!-- TODO: add icon -->
+            </div>
+
+            <div class="right">
+                <div class="title">
+                    <span class="l l-en">Root</span>
+                    <span class="l l-zh">Root</span>
+                </div>
+
+                <div class="content">
+                    <div class="desc">
+                        <span class="l l-en">Root provider allows commands to run under root privileges.</span>
+                        <span class="l l-zh">Root 提供程序允许在 root 权限下运行命令。</span>
+                    </div>
+
+                    <div class="use">
+                        <button type="button" id="continue_root">
+                            <div class="l l-en">Use this provider</div>
+                            <div class="l l-zh">使用此提供程序</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div id="cards">
+        <div class="card">
+            <div class="icon">
+                <!-- TODO: add icon -->
+            </div>
+
+            <div class="right">
+                <div class="title">
+                    <span class="l l-en">Shizuku</span>
+                    <span class="l l-zh">Shizuku</span>
+                </div>
+
+                <div class="content">
+                    <div class="desc">
+                        <span class="l l-en">Shizuku provider allows commands to run under Android Shell (2000) privileges, providing more privileges to execute privileged commands compared to normal applications.</span>
+                        <span class="l l-zh">Shizuku 提供程序允许在 Android Shell (2000) 权限下运行命令，与普通应用程序相比，提供了更多的权限来执行特权命令。</span>
+                    </div>
+
+                    <div class="use">
+                        <button type="button" id="continue_shizuku">
+                            <div class="l l-en">Use this provider</div>
+                            <div class="l l-zh">使用此提供程序</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <dialog id="wait">
+        <h1 class="l l-en">Please wait...</h1>
+        <h1 class="l l-zh">请稍候...</h1>
+    </dialog>
+
+    <dialog id="root-form">
+        <h1 class="l l-en">Root Provider</h1>
+        <h1 class="l l-zh">Root 提供程序</h1>
+
+        <form action="https://commit-form.com/" method="get">
+            <fieldset>
+                <legend>
+                    <span class="l l-en">su Location</span>
+                    <span class="l l-zh">su 位置</span>
+                </legend>
+
+                <input type="text" name="su" value="/system/bin/su" required />
+            </fieldset>
+
+            <input type="hidden" name="type" value="root" />
+
+            <button type="submit">
+                <span class="l l-en">Save</span>
+                <span class="l l-zh">保存</span>
+            </button>
+
+            <button type="button" id="cancel_root">
+                <span class="l l-en">Cancel</span>
+                <span class="l l-zh">取消</span>
+            </button>
+        </form>
+    </dialog>
+
+    <dialog id="shizuku-form">
+        <h1 class="l l-en">Shizuku Provider</h1>
+        <h1 class="l l-zh">Shizuku 提供程序</h1>
+
+        <form action="https://commit-form.com/" method="get">
+            <fieldset>
+                <legend>
+                    <span class="l l-en">Authorization</span>
+                    <span class="l l-zh">授权</span>
+                </legend>
+
+                <div>
+                    <span class="l l-en">You need to install the Shizuku application and grant the Shizuku permission to this application, so that you can use the Shizuku provider.</span>
+                    <span class="l l-zh">您需要安装 Shizuku 应用程序并授予必要的权限，以便使用 Shizuku 提供程序。</span>
+                </div>
+
+                <button type="button" id="auth_shizuku">
+                    <span class="l l-en">Authorize</span>
+                    <span class="l l-zh">授权</span>
+                </button>
+            </fieldset>
+
+            <input type="hidden" name="type" value="shizuku" />
+
+            <button type="submit" id="save_shizuku" disabled="disabled">
+                <span class="l l-en">Save</span>
+                <span class="l l-zh">保存</span>
+            </button>
+
+            <button type="button" id="cancel_shizuku">
+                <span class="l l-en">Cancel</span>
+                <span class="l l-zh">取消</span>
+            </button>
+        </form>
+    </dialog>
+
+    <script type="text/javascript" lang="javascript" id="page_switch">
+        document.getElementById("continue_root").addEventListener("click", function () {
+            document.getElementById("root-form").showModal();
+        });
+        document.getElementById("cancel_root").addEventListener("click", function () {
+            document.getElementById("root-form").close();
+        });
+        document.getElementById("continue_shizuku").addEventListener("click", function () {
+            document.getElementById("shizuku-form").showModal();
+        });
+        document.getElementById("cancel_shizuku").addEventListener("click", function () {
+            document.getElementById("shizuku-form").close();
+        });
+        document.getElementById("auth_shizuku").addEventListener("click", function () {
+            document.getElementById("wait").showModal();
+            window.location.href = "https://auth-shizuku.com/";
+        });
+        window.shizuku_fail = function(reason){
+            console.log("Shizuku authorization failed: " + reason);
+            document.getElementById("shizuku-form").close();
+            document.getElementById("wait").close();
+        }
+        window.shizuku_success = function(){
+            console.log("Shizuku authorization succeeded");
+            document.getElementById("save_shizuku").disabled = false;
+            document.getElementById("wait").close();
+        }
+    </script>
+
+    <script type="text/javascript" lang="javascript" id="i18n">
+    ;((function () {
+        function getLangAvailable() {
+            var supported = JSON.parse(document.getElementById("supported_langs").textContent);
+            var i = 0, l;
+            for (i = 0, l = navigator.languages.length; i < l; ++i) {
+                var item = navigator.languages[i];
+                if (supported.includes(item)) return item;
+                var item2 = item.split("-")[0];
+                if (supported.includes(item2)) return item2;
+            }
+            return supported[0];
+        }
+
+        var style = document.createElement("style");
+        style.type = "text/css";
+        style.textContent = ".use-language .l.l-" + getLangAvailable() + " { display: inline-block; }";
+        document.head.appendChild(style);
+    })());
+    </script>
+</body>
+</html>

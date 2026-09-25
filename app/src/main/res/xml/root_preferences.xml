@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/settings_general">
+        <Preference
+            app:key="ignore_bo"
+            app:summary="@string/ignore_battery_optimization_summary"
+            app:title="@string/ignore_battery_optimization_title" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/settings_privacy_and_security">
         <ListPreference
             app:defaultValue="decline"

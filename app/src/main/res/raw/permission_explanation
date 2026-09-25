@@ -16,4 +16,7 @@ We will query all packages when TODO: write usages to TODO: write the purpose
 <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 We will request delete packages when you want to uninstall this application or some other application from the user interface to provide better uninstall experience to you.
 
+<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+We will request ignore battery optimizations when you want to use the application to provide a more strong experience to you.
+
 To learn more about your privacy, please see the user agreement and the privacy policy.

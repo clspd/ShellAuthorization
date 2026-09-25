@@ -44,7 +44,7 @@
     <string name="cannot_open_page">Cannot open page</string>
     <string name="accept_button">Accept</string>
     <string name="decline_button">Decline</string>
-    <string name="loading_text">Loading...</string>
+    <string name="loading_text">Loading…</string>
     <string name="license_dialog_title">License</string>
     <string name="license_dialog_content">You need to accept the user agreement and privacy policy to use the application.</string>
     <string name="license_dialog_user_license">User agreement</string>
@@ -68,4 +68,24 @@
     <string name="fragment_container2_label">Fragment Dialog Container Page</string>
     <string name="fragment_add_shell_provider_title">Add shell provider</string>
     <string name="Close">Close</string>
+    <string name="shell_shizuku_fail_auth_noinstall_title">Cannot use Shizuku</string>
+    <string name="shell_shizuku_fail_auth_noinstall_content">Either you did not install Shizuku application or you refused me to query all packages, so I cannot continue.\nDo you want to download Shizuku now?</string>
+    <string name="shell_shizuku_fail_auth_noinstall_install">Download</string>
+    <string name="shell_shizuku_fail_auth_noinstall_giveup">Abandon</string>
+    <string name="shell_shizuku_fail_auth_noauth_title">Cannot use Shizuku</string>
+    <string name="shell_shizuku_fail_auth_noauth_content">Cannot use Shizuku because of either your decline or an internal problem.</string>
+    <string name="shell_shizuku_fail_auth_noauth_giveup">Abandon</string>
+    <string name="settings_general">General</string>
+    <string name="ignore_battery_optimization_title">Ignore battery optimization</string>
+    <string name="ignore_battery_optimization_summary">If your commands are always killed in background, you can try to ignore battery optimization.</string>
+    <string name="ignore_battery_optimization_already">Good news: Battery optimization has been ignored.</string>
+    <string name="shell_shizuku_success_auth_toast">Congratulations! You have successfully set up Shizuku.</string>
+    <string name="invalid_parameter_error">Invalid parameter.</string>
+    <string name="shell_root_fail_auth_notfound_title">Cannot Continue</string>
+    <string name="shell_root_fail_auth_notfound_content">Cannot continue because the su specified cannot be found.\nThis will happen when you have no root, specified wrong su path, or you declined me to use root.\nPlease check your device or change to another shell provider.</string>
+    <string name="shell_root_fail_auth_notfound_giveup">Abandon</string>
+    <string name="shell_provider_type_root">Root</string>
+    <string name="shell_provider_type_shizuku">Shizuku</string>
+    <string name="shell_provider_root_su_format">su: %1$s</string>
+    <string name="shell_provider_shizuku_version_format">Version: %1$d</string>
 </resources>

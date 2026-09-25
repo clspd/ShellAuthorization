@@ -44,7 +44,7 @@ using PCSTR = const char*;
 #define LOAD_STR_PARAM(name) \
 PCSTR name = env->GetStringUTFChars(_ ## name, nullptr); \
 if (!name) return ENOMEM; \
-RAIIHelper _strRemover__ ## name ([env, name, _ ## name] { env->ReleaseStringUTFChars(_ ## name, name); })
+RAIIHelper _strRemover_ ## name ([env, name, _ ## name] { env->ReleaseStringUTFChars(_ ## name, name); })
 inline bool E_FAILED(int result) { return result != 0; }
 
 // ----------
@@ -106,12 +106,60 @@ extern "C"
 Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyDataDirectory__1get(JNIEnv *env, jobject thiz, jstring _data) {
     PCSTR data = env->GetStringUTFChars(_data, nullptr);
     if (!data) return nullptr;
-    RAIIHelper _strRemover__data ([env, data, _data] { env->ReleaseStringUTFChars(_data, data); });
+    RAIIHelper _strRemover_data ([env, data, _data] { env->ReleaseStringUTFChars(_data, data); });
 
     std::filesystem::path p(data);
     p /= APP_DATA_DIR_VER;
 
     return env->NewStringUTF(p.c_str());
+}
+
+extern "C"
+[[maybe_unused]] JNIEXPORT jstring JNICALL
+Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_DataHelper_getShizukuPackageName(
+        JNIEnv *env, jclass clazz) {
+    return env->NewStringUTF("moe.shizuku.privileged.api");
+}
+
+extern "C"
+[[maybe_unused]] JNIEXPORT jstring JNICALL
+Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_DataHelper_getShizukuDownloadPage(
+        JNIEnv *env, jclass clazz) {
+    return env->NewStringUTF("https://github.com/RikkaApps/Shizuku/releases\0");
+}
+
+extern "C"
+[[maybe_unused]] JNIEXPORT jstring JNICALL
+Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_DataHelper_getShizukuShellMainClass(
+        JNIEnv *env, jclass clazz) {
+    return env->NewStringUTF("rikka.shizuku.shell.ShizukuShellLoader");
+}
+
+extern "C"
+[[maybe_unused]] JNIEXPORT jint JNICALL
+Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_ModeChanger_ChangeMode(JNIEnv *env,
+                                                                                    jclass clazz,
+                                                                                    jstring file,
+                                                                                    jint mode) {
+    if (file == nullptr) {
+        return -1;
+    }
+
+    const char *path = env->GetStringUTFChars(file, nullptr);
+    if (path == nullptr) {
+        return -1;
+    }
+
+    int ret = chmod(path, static_cast<mode_t>(mode));
+    int err = errno;
+
+    env->ReleaseStringUTFChars(file, path);
+
+    if (ret == 0) {
+        return 0;
+    }
+
+    return -err;
 }
 
 // -----------

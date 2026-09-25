@@ -11,7 +11,7 @@
 #   public *;
 #}
 # Add project specific ProGuard rules here.
--dontobfuscate
--keepattributes SourceFile,LineNumberTable
+#-dontobfuscate
+#-keepattributes SourceFile,LineNumberTable
 
 -keep class * extends androidx.fragment.app.Fragment { *; }

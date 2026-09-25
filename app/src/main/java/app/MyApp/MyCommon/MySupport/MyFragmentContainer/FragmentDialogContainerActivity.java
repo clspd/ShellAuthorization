@@ -55,17 +55,7 @@ public class FragmentDialogContainerActivity extends AppCompatActivity {
             Log.i("FragmentDialogContainer", "Fragment successfully created");
         }
         findViewById(R.id.overlay).setOnClickListener((v) -> { if (closeOnBackdropClick) finish(); });
-        findViewById(R.id.dialog).setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    return true;
-                case MotionEvent.ACTION_UP:
-                    v.performClick();
-                    return true;
-                default:
-                    return false;
-            }
-        });
+        findViewById(R.id.dialog).setOnClickListener((v) -> {});
         String title = getIntent().getStringExtra("Title");
         if (TextUtils.isEmpty(title)) title = getIntent().getStringExtra("Name");
         ((TextView)findViewById(R.id.textView_title)).setText(title);
