@@ -19,6 +19,7 @@ recyclerview = "1.4.0"
 preference = "1.2.1"
 cardview = "1.0.0"
 gson = "2.14.0"
+swiperefreshlayout = "1.1.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -46,6 +47,7 @@ recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version
 preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

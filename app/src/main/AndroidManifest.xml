@@ -8,7 +8,7 @@
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="PackageVisibilityPolicy,QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <queries>
         <intent>
@@ -42,8 +42,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="app.MyApp.MyShellAuthorization.MyPage.MainPage"
-            android:exported="true"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -87,14 +87,14 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="app.MyApp.MyCommon.MySupport.MyFragmentContainer.FragmentContainerActivity"
-            android:exported="false"
             android:configChanges=""
+            android:exported="false"
             android:label="@string/fragment_container_label"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="app.MyApp.MyCommon.MySupport.MyFragmentContainer.FragmentDialogContainerActivity"
-            android:exported="false"
             android:configChanges=""
+            android:exported="false"
             android:label="@string/fragment_container2_label"
             android:theme="@style/Theme.Backdrop"
             android:windowSoftInputMode="adjustResize" />

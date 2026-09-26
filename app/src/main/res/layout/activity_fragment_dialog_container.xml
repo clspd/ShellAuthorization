@@ -23,7 +23,7 @@
 
     <FrameLayout
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/app_fragment_dialog_margin_size"
         android:layout_marginTop="@dimen/app_fragment_dialog_margin_size"
         android:layout_marginEnd="@dimen/app_fragment_dialog_margin_size"
@@ -37,6 +37,7 @@
             android:id="@+id/dialog"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
             app:cardCornerRadius="@dimen/app_fragment_dialog_border_radius">
 
             <FrameLayout
@@ -80,7 +81,7 @@
                     <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/container"
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

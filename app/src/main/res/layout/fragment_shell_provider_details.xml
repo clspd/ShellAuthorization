@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="app.MyApp.MyShellAuthorization.MyFragment.ShellProviderDetailsFragment">
+
+    <TextView
+        android:id="@+id/textView_shellProviderType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:text="@string/shell_provider_type_root" />
+
+    <TextView
+        android:id="@+id/textView_shellProviderInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="14sp"
+        tools:text="@string/shell_provider_root_su_format" />
+
+    <Button
+        android:id="@+id/button_deleteShellProvider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/error"
+        android:text="@string/shell_provider_delete"
+        android:textColor="@color/on_error" />
+
+</LinearLayout>

@@ -24,9 +24,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -34,7 +31,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -46,6 +42,7 @@ import app.AppLogic.MainAppLogic.MyShellAuthorization.MyDataDirectory;
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.DataHelper;
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.ModeChanger;
+import app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderDeclaration;
 import top.clspd.shellauthorization.R;
 
 /**
@@ -241,14 +238,8 @@ public class AddShellProviderFragment extends Fragment {
     private void saveRootProviderAndFinish(String su) {
         File sp = new File(MyDataDirectory.get(), "shells");
         if (!sp.exists()) if (!sp.mkdir()) throw new RuntimeException("Cannot mkdir");
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", "root");
-        jsonObject.addProperty("su", su);
-        String jsonContent = new Gson().toJson(jsonObject);
-        File r = new File(sp, "root");
-        try (FileWriter writer = new FileWriter(r)) {
-            writer.write(jsonContent);
-            writer.flush();
+        try {
+            ShellProviderDeclaration.createRoot(su).write(new File(sp, ShellProviderDeclaration.TYPE_ROOT));
         } catch (IOException e) {
             throw new RuntimeException("Cannot write file", e);
         }
@@ -268,14 +259,8 @@ public class AddShellProviderFragment extends Fragment {
 
         File sp = new File(MyDataDirectory.get(), "shells");
         if (!sp.exists()) if (!sp.mkdir()) throw new RuntimeException("Cannot mkdir");
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("type", "shizuku");
-        jsonObject.addProperty("shizuku_version", sv);
-        String jsonContent = new Gson().toJson(jsonObject);
-        File r = new File(sp, "shizuku");
-        try (FileWriter writer = new FileWriter(r)) {
-            writer.write(jsonContent);
-            writer.flush();
+        try {
+            ShellProviderDeclaration.createShizuku(sv).write(new File(sp, ShellProviderDeclaration.TYPE_SHIZUKU));
         } catch (IOException e) {
             throw new RuntimeException("Cannot write file", e);
         }

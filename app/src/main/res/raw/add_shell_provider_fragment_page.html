@@ -8,146 +8,476 @@
         .use-language .l {
             display: none;
         }
-    </style>
-    <style type="text/css">
-        
+
+        :root {
+            color-scheme: light dark;
+
+            --primary: #0B57D0;
+            --on-primary: #FFFFFF;
+            --primary-container: #D3E4FF;
+            --on-primary-container: #001B3F;
+
+            --tertiary-container: #C2F0FA;
+            --on-tertiary-container: #002023;
+
+            --background: #F6F7F9;
+            --on-background: #1A1C20;
+            --surface: #F6F7F9;
+            --on-surface: #1A1C20;
+            --on-surface-variant: #43474E;
+
+            --surface-container-lowest: #FFFFFF;
+            --surface-container: #EAECF1;
+            --surface-container-high: #E4E7EC;
+
+            --outline: #74777F;
+            --outline-variant: #C3C6CF;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #A8C7FA;
+                --on-primary: #002E69;
+                --primary-container: #00458F;
+                --on-primary-container: #D3E4FF;
+
+                --tertiary-container: #004F58;
+                --on-tertiary-container: #C2F0FA;
+
+                --background: #1E222D;
+                --on-background: #E3E5E8;
+                --surface: #1E222D;
+                --on-surface: #E3E5E8;
+                --on-surface-variant: #C3C6CF;
+
+                --surface-container-lowest: #171A24;
+                --surface-container: #2A303C;
+                --surface-container-high: #323845;
+
+                --outline: #8E9199;
+                --outline-variant: #43474E;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--on-background);
+            font-family: Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .page {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 24px 20px 32px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .page-subtitle {
+            margin: 8px 0 0;
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .cards {
+            display: grid;
+            gap: 14px;
+        }
+
+        .card {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 18px;
+            background: var(--surface-container-lowest);
+            border: 1px solid var(--outline-variant);
+            border-radius: 18px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-icon {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+        }
+
+        .card-icon-root {
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+        }
+
+        .card-icon-shizuku {
+            background: var(--tertiary-container);
+            color: var(--on-tertiary-container);
+        }
+
+        .card-icon .icon {
+            width: 26px;
+            height: 26px;
+            display: block;
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .card-title {
+            margin: 2px 0 0;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .card-desc {
+            margin: 6px 0 16px;
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .page-header .btn {
+            flex: 0 0 auto;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 0;
+            padding: 11px 22px;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            font: inherit;
+            font-size: 14.5px;
+            font-weight: 600;
+            letter-spacing: 0.1px;
+            line-height: 1.2;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-block {
+            display: flex;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--on-primary);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+        }
+
+        .btn-primary:disabled {
+            background: var(--surface-container-high);
+            color: var(--on-surface-variant);
+            box-shadow: none;
+            cursor: default;
+            transform: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border-color: var(--outline);
+        }
+
+        .btn-text {
+            background: transparent;
+            color: var(--primary);
+            padding: 10px 16px;
+        }
+
+        dialog {
+            width: calc(100% - 48px);
+            max-width: 420px;
+            margin: auto;
+            padding: 24px;
+            border: none;
+            border-radius: 24px;
+            background: var(--surface-container-lowest);
+            color: var(--on-surface);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32);
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .dialog-title {
+            margin: 0 0 14px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .dialog-desc {
+            margin: 0 0 18px;
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 22px;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--on-surface-variant);
+            font-size: 12.5px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+        }
+
+        .field-input {
+            width: 100%;
+            margin: 0 0 4px;
+            padding: 12px 14px;
+            border: 1px solid var(--outline);
+            border-radius: 12px;
+            background: transparent;
+            color: var(--on-surface);
+            font-family: "Roboto Mono", "Droid Sans Mono", ui-monospace, monospace;
+            font-size: 15px;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-container);
+        }
+
+        .wait-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            padding: 10px 4px 6px;
+        }
+
+        .wait-text {
+            margin: 0;
+            color: var(--on-surface-variant);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--primary-container);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .spinner {
+                animation-duration: 2.4s;
+            }
+        }
     </style>
 </head>
 <body class="use-language">
     <script id="supported_langs" type="application/json">["en","zh"]</script>
 
-    <h1 class="l l-en">Please choose one of the following shell providers to continue.</h1>
-    <h1 class="l l-zh">请选择以下 Shell 提供程序之一以继续。</h1>
-
-    <a href="https://commit-form.com/?type=close">
-        <div class="l l-en">Cancel</div>
-        <div class="l l-zh">取消</div>
-    </a>
-
-    <div id="cards">
-        <div class="card">
-            <div class="icon">
-                <!-- TODO: add icon -->
+    <main class="page">
+        <header class="page-header">
+            <div>
+                <h1 class="page-title">
+                    <span class="l l-en">Add Shell Provider</span>
+                    <span class="l l-zh">添加 Shell 提供程序</span>
+                </h1>
+                <p class="page-subtitle">
+                    <span class="l l-en">Please choose one of the following shell providers to continue.</span>
+                    <span class="l l-zh">请选择以下 Shell 提供程序之一以继续。</span>
+                </p>
             </div>
 
-            <div class="right">
-                <div class="title">
-                    <span class="l l-en">Root</span>
-                    <span class="l l-zh">Root</span>
+            <a class="btn btn-text" href="https://commit-form.com/?type=close">
+                <span class="l l-en">Cancel</span>
+                <span class="l l-zh">取消</span>
+            </a>
+        </header>
+
+        <section id="cards" class="cards">
+            <article class="card">
+                <div class="card-icon card-icon-root">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 3 20 6v6c0 4.2-2.9 7.7-8 9-5.1-1.3-8-4.8-8-9V6z"></path>
+                        <path d="M8.8 12.2 11 14.4 15.2 10"></path>
+                    </svg>
                 </div>
 
-                <div class="content">
-                    <div class="desc">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <span class="l l-en">Root</span>
+                        <span class="l l-zh">Root</span>
+                    </h2>
+
+                    <p class="card-desc">
                         <span class="l l-en">Root provider allows commands to run under root privileges.</span>
                         <span class="l l-zh">Root 提供程序允许在 root 权限下运行命令。</span>
-                    </div>
+                    </p>
 
-                    <div class="use">
-                        <button type="button" id="continue_root">
-                            <div class="l l-en">Use this provider</div>
-                            <div class="l l-zh">使用此提供程序</div>
-                        </button>
-                    </div>
+                    <button type="button" class="btn btn-primary" id="continue_root">
+                        <span class="l l-en">Use this provider</span>
+                        <span class="l l-zh">使用此提供程序</span>
+                    </button>
                 </div>
-            </div>
-        </div>
+            </article>
 
-    <div id="cards">
-        <div class="card">
-            <div class="icon">
-                <!-- TODO: add icon -->
-            </div>
-
-            <div class="right">
-                <div class="title">
-                    <span class="l l-en">Shizuku</span>
-                    <span class="l l-zh">Shizuku</span>
+            <article class="card">
+                <div class="card-icon card-icon-shizuku">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="6" y="2.5" width="12" height="19" rx="3"></rect>
+                        <path d="M10 9.5 12 11.5 10 13.5"></path>
+                        <path d="M13.5 14h2"></path>
+                        <path d="M10.5 18.5h3"></path>
+                    </svg>
                 </div>
 
-                <div class="content">
-                    <div class="desc">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <span class="l l-en">Shizuku</span>
+                        <span class="l l-zh">Shizuku</span>
+                    </h2>
+
+                    <p class="card-desc">
                         <span class="l l-en">Shizuku provider allows commands to run under Android Shell (2000) privileges, providing more privileges to execute privileged commands compared to normal applications.</span>
                         <span class="l l-zh">Shizuku 提供程序允许在 Android Shell (2000) 权限下运行命令，与普通应用程序相比，提供了更多的权限来执行特权命令。</span>
-                    </div>
+                    </p>
 
-                    <div class="use">
-                        <button type="button" id="continue_shizuku">
-                            <div class="l l-en">Use this provider</div>
-                            <div class="l l-zh">使用此提供程序</div>
-                        </button>
-                    </div>
+                    <button type="button" class="btn btn-primary" id="continue_shizuku">
+                        <span class="l l-en">Use this provider</span>
+                        <span class="l l-zh">使用此提供程序</span>
+                    </button>
                 </div>
-            </div>
-        </div>
-
-    </div>
+            </article>
+        </section>
+    </main>
 
     <dialog id="wait">
-        <h1 class="l l-en">Please wait...</h1>
-        <h1 class="l l-zh">请稍候...</h1>
+        <div class="wait-box">
+            <div class="spinner"></div>
+            <p class="wait-text">
+                <span class="l l-en">Please wait...</span>
+                <span class="l l-zh">请稍候...</span>
+            </p>
+        </div>
     </dialog>
 
     <dialog id="root-form">
-        <h1 class="l l-en">Root Provider</h1>
-        <h1 class="l l-zh">Root 提供程序</h1>
+        <h2 class="dialog-title">
+            <span class="l l-en">Root Provider</span>
+            <span class="l l-zh">Root 提供程序</span>
+        </h2>
 
         <form action="https://commit-form.com/" method="get">
-            <fieldset>
-                <legend>
-                    <span class="l l-en">su Location</span>
-                    <span class="l l-zh">su 位置</span>
-                </legend>
+            <label class="field-label" for="root-form-su">
+                <span class="l l-en">su Location</span>
+                <span class="l l-zh">su 位置</span>
+            </label>
 
-                <input type="text" name="su" value="/system/bin/su" required />
-            </fieldset>
+            <input class="field-input" type="text" id="root-form-su" name="su" value="/system/bin/su" required />
 
             <input type="hidden" name="type" value="root" />
 
-            <button type="submit">
-                <span class="l l-en">Save</span>
-                <span class="l l-zh">保存</span>
-            </button>
+            <div class="dialog-actions">
+                <button type="button" class="btn btn-text" id="cancel_root">
+                    <span class="l l-en">Cancel</span>
+                    <span class="l l-zh">取消</span>
+                </button>
 
-            <button type="button" id="cancel_root">
-                <span class="l l-en">Cancel</span>
-                <span class="l l-zh">取消</span>
-            </button>
+                <button type="submit" class="btn btn-primary">
+                    <span class="l l-en">Save</span>
+                    <span class="l l-zh">保存</span>
+                </button>
+            </div>
         </form>
     </dialog>
 
     <dialog id="shizuku-form">
-        <h1 class="l l-en">Shizuku Provider</h1>
-        <h1 class="l l-zh">Shizuku 提供程序</h1>
+        <h2 class="dialog-title">
+            <span class="l l-en">Shizuku Provider</span>
+            <span class="l l-zh">Shizuku 提供程序</span>
+        </h2>
 
         <form action="https://commit-form.com/" method="get">
-            <fieldset>
-                <legend>
-                    <span class="l l-en">Authorization</span>
-                    <span class="l l-zh">授权</span>
-                </legend>
+            <p class="dialog-desc">
+                <span class="l l-en">You need to install the Shizuku application and grant the Shizuku permission to this application, so that you can use the Shizuku provider.</span>
+                <span class="l l-zh">您需要安装 Shizuku 应用程序并授予必要的权限，以便使用 Shizuku 提供程序。</span>
+            </p>
 
-                <div>
-                    <span class="l l-en">You need to install the Shizuku application and grant the Shizuku permission to this application, so that you can use the Shizuku provider.</span>
-                    <span class="l l-zh">您需要安装 Shizuku 应用程序并授予必要的权限，以便使用 Shizuku 提供程序。</span>
-                </div>
-
-                <button type="button" id="auth_shizuku">
-                    <span class="l l-en">Authorize</span>
-                    <span class="l l-zh">授权</span>
-                </button>
-            </fieldset>
+            <button type="button" class="btn btn-outline btn-block" id="auth_shizuku">
+                <span class="l l-en">Authorize</span>
+                <span class="l l-zh">授权</span>
+            </button>
 
             <input type="hidden" name="type" value="shizuku" />
 
-            <button type="submit" id="save_shizuku" disabled="disabled">
-                <span class="l l-en">Save</span>
-                <span class="l l-zh">保存</span>
-            </button>
+            <div class="dialog-actions">
+                <button type="button" class="btn btn-text" id="cancel_shizuku">
+                    <span class="l l-en">Cancel</span>
+                    <span class="l l-zh">取消</span>
+                </button>
 
-            <button type="button" id="cancel_shizuku">
-                <span class="l l-en">Cancel</span>
-                <span class="l l-zh">取消</span>
-            </button>
+                <button type="submit" class="btn btn-primary" id="save_shizuku" disabled="disabled">
+                    <span class="l l-en">Save</span>
+                    <span class="l l-zh">保存</span>
+                </button>
+            </div>
         </form>
     </dialog>
 
