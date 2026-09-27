@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.os.Process;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
 import app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderDeclaration;
 import app.MyApp.MyShellAuthorization.MyDataStructures.ShellsDatabase;
 import top.clspd.shellauthorization.R;
@@ -49,6 +51,7 @@ public class ShellProviderDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            AntiTamper.AntiTamper_ValueMustWithin(1907846445, android.os.Process.myTid(), AntiTamper.AntiTamper_ComputeValue2(5, Process.PHONE_UID, 0x1883), 409470994);
             name = getArguments().getString(ARG_NAME);
         }
     }
@@ -83,22 +86,8 @@ public class ShellProviderDetailsFragment extends Fragment {
     private void showDeclaration(View view, ShellProviderDeclaration declaration) {
         TextView type = view.findViewById(R.id.textView_shellProviderType);
         TextView info = view.findViewById(R.id.textView_shellProviderInfo);
-        switch (declaration.type) {
-            case ShellProviderDeclaration.TYPE_ROOT:
-                type.setText(getString(R.string.shell_provider_type_root));
-                info.setText(getString(R.string.shell_provider_root_su_format,
-                        declaration.su == null ? "" : declaration.su));
-                break;
-            case ShellProviderDeclaration.TYPE_SHIZUKU:
-                type.setText(getString(R.string.shell_provider_type_shizuku));
-                info.setText(getString(R.string.shell_provider_shizuku_version_format,
-                        declaration.getShizukuVersion()));
-                break;
-            default:
-                type.setText(declaration.type);
-                info.setText("");
-                break;
-        }
+        type.setText(app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderRepository.displayName(declaration));
+        info.setText(app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderRepository.toDisplaySummary(declaration));
 
         view.findViewById(R.id.button_deleteShellProvider).setOnClickListener(v ->
             new AlertDialog.Builder(requireContext())

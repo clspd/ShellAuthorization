@@ -74,7 +74,7 @@
     <string name="shell_shizuku_fail_auth_noinstall_install">Download</string>
     <string name="shell_shizuku_fail_auth_noinstall_giveup">Abandon</string>
     <string name="shell_shizuku_fail_auth_noauth_title">Cannot use Shizuku</string>
-    <string name="shell_shizuku_fail_auth_noauth_content">Cannot use Shizuku because of either your decline or an internal problem.</string>
+    <string name="shell_shizuku_fail_auth_noauth_content">Cannot use Shizuku because of either your decline or an internal problem. If you are sure you configured well, please try to ignore all battery optimization related settings for both me and Shizuku application.</string>
     <string name="shell_shizuku_fail_auth_noauth_giveup">Abandon</string>
     <string name="settings_general">General</string>
     <string name="ignore_battery_optimization_title">Ignore battery optimization</string>
@@ -83,12 +83,13 @@
     <string name="shell_shizuku_success_auth_toast">Congratulations! You have successfully set up Shizuku.</string>
     <string name="invalid_parameter_error">Invalid parameter.</string>
     <string name="shell_root_fail_auth_notfound_title">Cannot Continue</string>
-    <string name="shell_root_fail_auth_notfound_content">Cannot continue because the su specified cannot be found.\nThis will happen when you have no root, specified wrong su path, or you declined me to use root.\nPlease check your device or change to another shell provider.</string>
+    <string name="shell_root_fail_auth_notfound_content">Cannot continue because the su specified cannot be found.\nPlease check the su path, or change to another shell provider.</string>
     <string name="shell_root_fail_auth_notfound_giveup">Abandon</string>
+    <string name="shell_root_fail_auth_noroot_title">Cannot Get Root</string>
+    <string name="shell_root_fail_auth_noroot_content">The su specified was found, but it did not give us root privileges.\nThis will happen when you have no root, or you declined me to use root.\nPlease check your device or change to another shell provider.</string>
+    <string name="shell_root_fail_auth_noroot_giveup">Abandon</string>
     <string name="shell_provider_type_root">Root</string>
     <string name="shell_provider_type_shizuku">Shizuku</string>
-    <string name="shell_provider_root_su_format">su: %1$s</string>
-    <string name="shell_provider_shizuku_version_format">Version: %1$d</string>
     <string name="fragment_shell_provider_details_title">Shell provider details</string>
     <string name="shell_provider_delete">Delete provider</string>
     <string name="shell_provider_delete_confirm">Are you sure you want to delete this shell provider?</string>
@@ -119,4 +120,19 @@
     <string name="edit_template_save">Save</string>
     <string name="edit_template_no_shell_provider_title">No shell provider</string>
     <string name="edit_template_no_shell_provider_content">You need to set up a shell provider before you can edit a template.</string>
+    <string name="add_shell_provider_subtitle">Please choose one of the following shell providers to continue.</string>
+    <string name="add_shell_provider_use_this">Use this provider</string>
+    <string name="shell_provider_param_su">su Location</string>
+    <string name="shell_provider_action_authorize">Authorize</string>
+    <string name="shell_provider_action_root_check_desc">This will check whether root access is available.</string>
+    <string name="shell_provider_friendly_name">Name</string>
+    <string name="shell_provider_save">Save</string>
+    <string name="shell_provider_type_shell">Shell</string>
+    <string name="shell_provider_root_description">Root provider allows commands to run under root privileges.</string>
+    <string name="shell_provider_root_detailed_description">Commands will run with root privileges via the su binary you specify.</string>
+    <string name="shell_provider_shizuku_description">Shizuku provider allows commands to run under Android Shell (2000) privileges, providing more privileges to execute privileged commands compared to normal applications.</string>
+    <string name="shell_provider_shizuku_detailed_description">You need to install the Shizuku application and grant the Shizuku permission to this application, so that you can use the Shizuku provider.</string>
+    <string name="shell_shizuku_fail_illegal_shizuku_content">Cannot use Shizuku because the Shizuku installed on your device seems to be illegal. If you installed non-official Shizuku, your data and your runtime might be no longer safe.\nPlease install Shizuku from legal sources and try again.</string>
+    <string name="fragment_edit_user_profile_title">Edit User Profile</string>
+    <string name="edit_user_profile_top_hint">Tip: Most features here require root access.</string>
 </resources>

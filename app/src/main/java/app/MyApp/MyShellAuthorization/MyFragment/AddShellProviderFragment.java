@@ -1,61 +1,37 @@
 package app.MyApp.MyShellAuthorization.MyFragment;
 
-import static app.MyApp.MyCommon.MyUtilities.RawResourceReader.readRawResource;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.ArrayList;
+import java.util.List;
 
-import app.AppLogic.MainAppLogic.MyShellAuthorization.MyDataDirectory;
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
-import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.DataHelper;
-import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.ModeChanger;
-import app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderDeclaration;
-import app.MyApp.MyShellAuthorization.MyDataStructures.ShellsDatabase;
+import app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderRepository;
+import app.MyApp.MyShellAuthorization.MyWidget.ShellProviderSetupPanel;
 import top.clspd.shellauthorization.R;
+import top.clspd.shellauthorization.Shared.ShellProvider.intf.ShellProviderInterface;
+import top.clspd.shellauthorization.Shared.ShellProvider.registry.ShellProvidersList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AddShellProviderFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AddShellProviderFragment extends Fragment {
 
-    private WebView w;
-
     public AddShellProviderFragment() {
-        // Required empty public constructor
     }
 
     public static AddShellProviderFragment newInstance(Bundle bundle) {
@@ -72,190 +48,59 @@ public class AddShellProviderFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            AntiTamper.AntiTamper_ValueMustEqual2(982691035, 1082376, 1868812, 7035844);
+            AntiTamper.AntiTamper_ValueMustEqual2(0x36b141bb, 0x293f10a2, 0x283f10ae,
+                    AntiTamper.AntiTamper_ComputeValue2(51966, 16777216, 0));
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_shell_provider, container, false);
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        w = view.findViewById(R.id.webview);
-        w.getSettings().setJavaScriptEnabled(true);
-        w.getSettings().setDomStorageEnabled(true);
-        w.getSettings().setMediaPlaybackRequiresUserGesture(false);
-        w.getSettings().setAllowContentAccess(true);
-        w.loadDataWithBaseURL("http://127.0.0.1/", readRawResource(requireContext(), R.raw.add_shell_provider_fragment_page), "text/html", "utf-8", null);
-        w.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            String url = request.getUrl().toString();
-            if (url.startsWith("https://commit-form.com/")) {
-                Uri uri = Uri.parse(url);
-                String type = uri.getQueryParameter("type");
-                if (type != null) switch (type) {
-                    case "close":
-                        break;
-                    case "root":
-                    {
-                        String su = uri.getQueryParameter("su");
-                        if (null == su) break;
-                        if (!new File(su).exists()) {
-                            requireActivity().runOnUiThread(() -> new AlertDialog.Builder(requireContext())
-                                .setTitle(requireContext().getString(R.string.shell_root_fail_auth_notfound_title))
-                                .setMessage(requireContext().getString(R.string.shell_root_fail_auth_notfound_content))
-                                .setPositiveButton(requireContext().getString(R.string.shell_root_fail_auth_notfound_giveup), null)
-                                .show());
-                            return true;
-                        }
-                        new Thread(() -> {
-                            try {
-                                Process p = Runtime.getRuntime().exec(su);
-                                DataOutputStream os = new DataOutputStream(p.getOutputStream());
+        TextView subtitle = view.findViewById(R.id.textView_addShellProviderSubtitle);
+        subtitle.setText(R.string.add_shell_provider_subtitle);
 
-                                os.writeBytes("/system/bin/id -u\n");
-                                os.flush();
-                                os.close();
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_availableProviders);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-                                BufferedReader r = new BufferedReader(
-                                        new InputStreamReader(p.getInputStream()));
-                                String line;
-                                StringBuilder total = new StringBuilder();
-                                while ((line = r.readLine()) != null) {
-                                    total.append(line);
-                                }
-                                p.waitFor();
-
-                                if (!total.toString().trim().equals("0")) throw new Exception("Cannot root.");
-
-                                requireActivity().runOnUiThread(() -> saveRootProviderAndFinish(su));
-                            }
-                            catch (Exception e) {
-                                requireActivity().runOnUiThread(() -> Toast.makeText(requireContext(), e.toString(), Toast.LENGTH_LONG).show());
-                            }
-                        }).start();
-                        return true;
-                    }
-                    case "shizuku":
-                        saveShizukuProviderAndFinish();
-                        return true;
-                }
-                requireActivity().finish();
-                return true;
+        List<ShellProviderInterface> providers = new ArrayList<>();
+        Context host = requireContext();
+        for (Class<? extends ShellProviderInterface> c : ShellProvidersList.getList()) {
+            try {
+                ShellProviderInterface p = c.getDeclaredConstructor().newInstance();
+                p.setContext(host);
+                providers.add(p);
+            } catch (Exception ignored) {
             }
-            if (url.startsWith("https://auth-shizuku.com/")) {
-                doHandleShizukuAuthLogic();
-                return true;
-            }
-            return false;
-            }
-        });
-    }
-
-    private void doHandleShizukuAuthLogic() {
-        PackageManager pm = requireContext().getPackageManager();
-        try {
-            ApplicationInfo appInfo = pm.getApplicationInfo(DataHelper.getShizukuPackageName(), 0);
-            String apk = appInfo.sourceDir;
-            String dataDir = MyDataDirectory.get();
-            File shizuku_support = new File(dataDir, "shizuku_support");
-            if (!shizuku_support.exists()) if (!shizuku_support.mkdir()) throw new Exception("cannot mkdir");
-            // extract assets/rish and assets/rish_shizuku.dex to support dir
-            extractFromApk(apk, "assets/rish", new File(shizuku_support, "rish_wrapper"));
-            File RSD = new File(shizuku_support, "rish_shizuku.dex");
-            if (RSD.exists()) ModeChanger.ChangeMode(RSD.getAbsolutePath(), 0600);
-            extractFromApk(apk, "assets/rish_shizuku.dex", RSD);
-            ModeChanger.ChangeMode(RSD.getAbsolutePath(), 0400);
-            // run it to check permission
-            new Thread(() -> {
-                Process process = null;
-                try {
-                    ProcessBuilder pb = new ProcessBuilder("/system/bin/app_process",
-                        "-Djava.class.path=" + RSD.getAbsolutePath(), "/system/bin",
-                        "--nice-name=rish_client", DataHelper.getShizukuShellMainClass(), "/system/bin/id");
-                    Map<String, String> env = pb.environment();
-                    env.put("RISH_APPLICATION_ID", requireContext().getPackageName());
-                    Log.d("AddShellProviderFragment", "Launching : " + String.join(" ", pb.command()));
-                    process = pb.start();
-
-                    int exitCode = process.waitFor();
-
-                    requireActivity().runOnUiThread(() -> {
-                        if (exitCode == 0) {
-                            Toast.makeText(requireContext(), getString(R.string.shell_shizuku_success_auth_toast), Toast.LENGTH_SHORT).show();
-                            w.evaluateJavascript("shizuku_success()", result -> {});
-                            return;
-                        }
-                        new AlertDialog.Builder(requireContext())
-                            .setTitle(requireContext().getString(R.string.shell_shizuku_fail_auth_noauth_title))
-                            .setMessage(requireContext().getString(R.string.shell_shizuku_fail_auth_noauth_content))
-                            .setPositiveButton(requireContext().getString(R.string.shell_shizuku_fail_auth_noauth_giveup), null)
-                            .show();
-                        w.evaluateJavascript("shizuku_fail(2)", result -> {});
-                    });
-                } catch (Exception e) {
-                    Log.e("AddShellProviderFragment", e.toString());
-                    w.evaluateJavascript("shizuku_fail(0)", result -> {});
-                } finally {
-                    if (process != null) {
-                        process.destroy();
-                    }
-                }
-            }).start();
-        } catch (PackageManager.NameNotFoundException e) {
-            requireActivity().runOnUiThread(() -> {
-                new AlertDialog.Builder(requireContext())
-                    .setTitle(requireContext().getString(R.string.shell_shizuku_fail_auth_noinstall_title))
-                    .setMessage(requireContext().getString(R.string.shell_shizuku_fail_auth_noinstall_content))
-                    .setPositiveButton(requireContext().getString(R.string.shell_shizuku_fail_auth_noinstall_install), (dialog, which) -> {
-                        String myStr = DataHelper.getShizukuDownloadPage();
-                        Uri webpage = Uri.parse(myStr);
-                        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-                        if (intent.resolveActivity(requireContext().getPackageManager()) != null) {
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(requireContext(), getString(R.string.cannot_open_page), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton(requireContext().getString(R.string.shell_shizuku_fail_auth_noinstall_giveup), null)
-                    .show();
-            });
-            w.evaluateJavascript("shizuku_fail(1)", result -> {});
-        } catch (Exception e) {
-            Log.e("AddShellProviderFragment", e.toString());
-            w.evaluateJavascript("shizuku_fail(0)", result -> {});
         }
+
+        recyclerView.setAdapter(new AvailableProviderAdapter(providers, this::showSetupDialog));
     }
 
-    private void saveRootProviderAndFinish(String su) {
-        saveProviderAndFinish(ShellProviderDeclaration.createRoot(su));
+    private void showSetupDialog(ShellProviderInterface provider) {
+        Context ctx = requireContext();
+        ShellProviderSetupPanel panel = new ShellProviderSetupPanel(provider, this::onProviderSaved);
+        View content = panel.build(ctx);
+
+        new AlertDialog.Builder(ctx)
+                .setTitle(provider.getProviderFriendlyName())
+                .setView(content)
+                .setNegativeButton(R.string.Cancel, null)
+                .show();
     }
 
-    private void saveShizukuProviderAndFinish() {
-        long sv = 0;
-        PackageManager pm = requireContext().getPackageManager();
-        try {
-            PackageInfo appInfo = pm.getPackageInfo(DataHelper.getShizukuPackageName(), 0);
-            sv = appInfo.getLongVersionCode();
-        } catch (PackageManager.NameNotFoundException e) {
-            return;
-        }
-        saveProviderAndFinish(ShellProviderDeclaration.createShizuku(sv));
-    }
-
-    private void saveProviderAndFinish(ShellProviderDeclaration declaration) {
+    private void onProviderSaved(String identifier, String providerName, String friendlyName,
+                                 ShellProviderInterface provider) {
         Context appContext = requireContext().getApplicationContext();
         Activity activity = requireActivity();
         new Thread(() -> {
-            ShellsDatabase.get(appContext).shellProviderDao().insert(declaration);
+            ShellProviderRepository.save(appContext, identifier, providerName, friendlyName, provider);
             activity.runOnUiThread(() -> {
                 activity.setResult(Activity.RESULT_OK);
                 activity.finish();
@@ -263,19 +108,54 @@ public class AddShellProviderFragment extends Fragment {
         }).start();
     }
 
-    private void extractFromApk(String apkPath, String entryPath, File outFile) throws Exception {
-        try (ZipFile zipFile = new ZipFile(apkPath)) {
-            ZipEntry entry = zipFile.getEntry(entryPath);
-            if (entry == null || entry.isDirectory()) {
-                throw new Exception("file not found " + entryPath);
-            }
-            try (InputStream is = zipFile.getInputStream(entry);
-                 FileOutputStream fos = new FileOutputStream(outFile)) {
-                byte[] buf = new byte[8192];
-                int len;
-                while ((len = is.read(buf)) != -1) {
-                    fos.write(buf, 0, len);
-                }
+    private static class AvailableProviderAdapter
+            extends RecyclerView.Adapter<AvailableProviderAdapter.ViewHolder> {
+
+        private final List<ShellProviderInterface> items;
+        private final java.util.function.Consumer<ShellProviderInterface> onUse;
+
+        AvailableProviderAdapter(List<ShellProviderInterface> items,
+                                 java.util.function.Consumer<ShellProviderInterface> onUse) {
+            this.items = items;
+            this.onUse = onUse;
+        }
+
+        @androidx.annotation.NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_add_shell_provider, parent, false);
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            ShellProviderInterface item = items.get(position);
+            Context ctx = holder.itemView.getContext();
+            holder.icon.setImageResource(item.getProviderIconResourceIdentifier());
+            holder.title.setText(item.getProviderFriendlyName());
+            holder.desc.setText(item.getProviderDescription());
+            holder.use.setText(R.string.add_shell_provider_use_this);
+            holder.use.setOnClickListener(v -> onUse.accept(item));
+        }
+
+        @Override
+        public int getItemCount() {
+            return items.size();
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
+            final ImageView icon;
+            final TextView title;
+            final TextView desc;
+            final Button use;
+
+            ViewHolder(View itemView) {
+                super(itemView);
+                icon = itemView.findViewById(R.id.imageView_providerIcon);
+                title = itemView.findViewById(R.id.textView_providerTitle);
+                desc = itemView.findViewById(R.id.textView_providerDesc);
+                use = itemView.findViewById(R.id.button_useProvider);
             }
         }
     }

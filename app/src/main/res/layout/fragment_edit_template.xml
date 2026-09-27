@@ -86,12 +86,12 @@
             android:maxLines="1"
             android:text="@string/edit_template_user_profile_default"
             app:layout_constraintBottom_toTopOf="@+id/textView16"
-            app:layout_constraintEnd_toStartOf="@+id/button3"
+            app:layout_constraintEnd_toStartOf="@+id/button_editUserProfile"
             app:layout_constraintStart_toEndOf="@+id/textView13"
             app:layout_constraintTop_toBottomOf="@+id/divider1" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/button_editUserProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -107,7 +107,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/edit_template_shell_command_prompt"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button3" />
+            app:layout_constraintTop_toBottomOf="@+id/button_editUserProfile" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"

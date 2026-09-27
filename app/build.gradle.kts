@@ -15,8 +15,8 @@ android {
         applicationId = "top.clspd.shellauthorization"
         minSdk = 28
         targetSdk = 37
-        versionCode = 6
-        versionName = "0.0.0-alpha.6"
+        versionCode = 7
+        versionName = "0.0.0-alpha.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        externalNativeBuild {
@@ -66,6 +66,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.activity.compose)
     implementation(libs.activity.ktx)
+    implementation(libs.apksig)
     implementation(libs.appcompat)
     implementation(libs.cardview)
     implementation(libs.constraintlayout)

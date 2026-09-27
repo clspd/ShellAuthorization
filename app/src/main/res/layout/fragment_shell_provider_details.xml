@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:textSize="14sp"
-        tools:text="@string/shell_provider_root_su_format" />
+        tools:text="su: /system/bin/su" />
 
     <Button
         android:id="@+id/button_deleteShellProvider"

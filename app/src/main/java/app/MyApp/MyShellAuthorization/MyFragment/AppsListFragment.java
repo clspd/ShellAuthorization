@@ -301,7 +301,7 @@ public class AppsListFragment extends Fragment {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_application_card_in_applications, parent, false);
             return new ViewHolder(v);
         }
 

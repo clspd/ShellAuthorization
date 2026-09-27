@@ -28,6 +28,7 @@ roomRxjava3 = "2.5.1"
 roomCommon = "2.5.1"
 roomKtx = "2.5.1"
 roomCompiler = "2.5.1"
+apksig = "9.4.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -64,6 +65,7 @@ room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "
 room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+apksig = { group = "com.android.tools.build", name = "apksig", version.ref = "apksig" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

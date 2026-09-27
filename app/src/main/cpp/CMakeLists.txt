@@ -27,7 +27,10 @@ project("shellauthorization")
 # used in the AndroidManifest.xml file.
 add_library(${CMAKE_PROJECT_NAME} SHARED
     # List C/C++ source files with relative paths to this CMakeLists.txt.
-    sa_jni.cpp)
+    app/sa_jni.cpp
+    app/shizuku_support.cpp
+#    lib/AndroidPackageSignatureHelper.cpp
+)
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
@@ -37,7 +40,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     android
     log)
 
-add_library(saAntiTamper SHARED sa_antitamper.cpp)
+add_library(saAntiTamper SHARED app/sa_antitamper.cpp)
 set_target_properties(saAntiTamper PROPERTIES
         OUTPUT_NAME satamperprotection # Shared library CANNOT add lib*.so!! Otherwise the name will duplicate
 )
@@ -46,7 +49,7 @@ target_link_libraries(saAntiTamper
         android
         log)
 
-add_executable(salib salib.cpp sa_modules.cpp saimpl.cpp)
+add_executable(salib app/salib.cpp app/sa_modules.cpp app/saimpl.cpp)
 set_target_properties(salib PROPERTIES
         OUTPUT_NAME libshellauthorizationcore.so
 )
@@ -54,7 +57,7 @@ target_link_libraries(salib
         # List libraries link to the target library
 )
 
-add_executable(sadaemon sadaemon.cpp)
+add_executable(sadaemon app/sadaemon.cpp)
 set_target_properties(sadaemon PROPERTIES
         OUTPUT_NAME libsadaemon.so
 )

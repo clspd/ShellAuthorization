@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyDataDirectory;
+import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
 import app.MyApp.MyShellAuthorization.MyDataStructures.AllowDeclaration;
 import top.clspd.shellauthorization.R;
 
@@ -55,6 +56,7 @@ public class ApplicationDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            AntiTamper.AntiTamper_ValueMustWithin2(1324648023, android.os.Process.myTid(), -153716086, 409470690, 432123789);
             packageName = getArguments().getString(ARG_PACKAGE);
         }
     }

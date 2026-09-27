@@ -39,6 +39,7 @@ public class AppNativeStartupInitialization {
             Log.wtf("AppNativeStartupInitialization", msg);
             throw new RuntimeException(msg);
         }
+        AntiTamper.AntiTamper_ValueMustEqual2(51966, 124191967, 409468928, -107414752);
         Log.i("AppNativeStartupInitialization", "Application initialization was successfully completed");
     }
 }

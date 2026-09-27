@@ -4,4 +4,5 @@ public class DataHelper {
     public static native String getShizukuPackageName();
     public static native String getShizukuDownloadPage();
     public static native String getShizukuShellMainClass();
+    public static native boolean checkWhetherKnownShizukuSignature(String signature);
 }

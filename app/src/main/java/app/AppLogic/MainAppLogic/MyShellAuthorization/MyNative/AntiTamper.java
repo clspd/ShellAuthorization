@@ -1,11 +1,24 @@
 package app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 public class AntiTamper {
-    public static void LoadAntiTamper() {
+    private static native int _Load(String apk);
+
+    public static void LoadAntiTamper(Context ctx) {
         Log.i("AntiTamper", "Setting up anti tamper protection...");
         System.loadLibrary("satamperprotection");
+        PackageManager pm = ctx.getPackageManager();
+        ApplicationInfo app;
+        try {
+            app = pm.getApplicationInfo(ctx.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        if (_Load(app.sourceDir) != 0) SignalSender.SendSignal(android.os.Process.myPid(), 9);
         Log.i("AntiTamper", "Anti Tamper Component has been loaded. Do not try to tamper with this application!");
     }
 

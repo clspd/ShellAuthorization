@@ -123,23 +123,8 @@ public class ShellProvidersFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             ShellProviderDeclaration item = items.get(position);
-            Context ctx = holder.itemView.getContext();
-            switch (item.type) {
-                case ShellProviderDeclaration.TYPE_ROOT:
-                    holder.title.setText(ctx.getString(R.string.shell_provider_type_root));
-                    holder.subtitle.setText(ctx.getString(R.string.shell_provider_root_su_format,
-                            item.su == null ? "" : item.su));
-                    break;
-                case ShellProviderDeclaration.TYPE_SHIZUKU:
-                    holder.title.setText(ctx.getString(R.string.shell_provider_type_shizuku));
-                    holder.subtitle.setText(ctx.getString(R.string.shell_provider_shizuku_version_format,
-                            item.getShizukuVersion()));
-                    break;
-                default:
-                    holder.title.setText(item.type);
-                    holder.subtitle.setText("");
-                    break;
-            }
+            holder.title.setText(app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderRepository.displayName(item));
+            holder.subtitle.setText(app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderRepository.toDisplaySummary(item));
             holder.itemView.setOnClickListener(v -> onItemClick.accept(item));
         }
 

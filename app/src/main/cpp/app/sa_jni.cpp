@@ -115,27 +115,6 @@ Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyDataDirectory__1get(JNIEnv
 }
 
 extern "C"
-[[maybe_unused]] JNIEXPORT jstring JNICALL
-Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_DataHelper_getShizukuPackageName(
-        JNIEnv *env, jclass clazz) {
-    return env->NewStringUTF("moe.shizuku.privileged.api");
-}
-
-extern "C"
-[[maybe_unused]] JNIEXPORT jstring JNICALL
-Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_DataHelper_getShizukuDownloadPage(
-        JNIEnv *env, jclass clazz) {
-    return env->NewStringUTF("https://github.com/RikkaApps/Shizuku/releases\0");
-}
-
-extern "C"
-[[maybe_unused]] JNIEXPORT jstring JNICALL
-Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_DataHelper_getShizukuShellMainClass(
-        JNIEnv *env, jclass clazz) {
-    return env->NewStringUTF("rikka.shizuku.shell.ShizukuShellLoader");
-}
-
-extern "C"
 [[maybe_unused]] JNIEXPORT jint JNICALL
 Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_ModeChanger_ChangeMode(JNIEnv *env,
                                                                                     jclass clazz,
@@ -178,5 +157,6 @@ int SetupDataDirectoryStructure(PCSTR lpszDataDirectory) {
 
     return 0;
 }
+
 
 

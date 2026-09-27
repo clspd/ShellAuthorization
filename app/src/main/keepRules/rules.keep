@@ -15,3 +15,17 @@
 #-keepattributes SourceFile,LineNumberTable
 
 -keep class * extends androidx.fragment.app.Fragment { *; }
+
+-keep class * implements top.clspd.shellauthorization.Shared.ShellProvider.intf.ShellProviderInterface { *; }
+-keep interface top.clspd.shellauthorization.Shared.ShellProvider.intf.** { *; }
+-keepclassmembers class * implements top.clspd.shellauthorization.Shared.ShellProvider.intf.ShellProviderInterface {
+    public static final java.lang.String PROVIDER_NAME;
+}
+-keep class top.clspd.shellauthorization.Shared.ShellProvider.registry.** { *; }
+-keep class top.clspd.shellauthorization.Shared.ShellProvider.data.** { *; }
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
+-keep @androidx.room.Entity class * { *; }
+-keepclassmembers class * { @androidx.room.* <methods>; }
+-keepclassmembers class * { @androidx.room.* <fields>; }
+-keepclassmembers class * { @androidx.room.* <init>(...); }
+-keep class app.MyApp.MyShellAuthorization.MyDataStructures.AllowDeclaration { *; }
