@@ -5,10 +5,10 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
 material = "1.10.0"
-activityKtx = "1.8.0"
+activityKtx = "1.13.0"
 constraintlayout = "2.1.4"
 lifecycleRuntimeKtx = "2.6.1"
-activityCompose = "1.8.0"
+activityCompose = "1.13.0"
 kotlin = "2.2.10"
 composeBom = "2026.02.01"
 navigationFragment = "2.6.0"
@@ -20,6 +20,14 @@ preference = "1.2.1"
 cardview = "1.0.0"
 gson = "2.14.0"
 swiperefreshlayout = "1.1.0"
+roomRuntime = "2.5.1"
+roomMigration = "2.5.1"
+roomPaging = "2.5.1"
+roomPagingRxjava3 = "2.5.1"
+roomRxjava3 = "2.5.1"
+roomCommon = "2.5.1"
+roomKtx = "2.5.1"
+roomCompiler = "2.5.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -48,6 +56,14 @@ preference = { group = "androidx.preference", name = "preference", version.ref =
 cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+room-migration = { group = "androidx.room", name = "room-migration", version.ref = "roomMigration" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomPaging" }
+room-paging-rxjava3 = { group = "androidx.room", name = "room-paging-rxjava3", version.ref = "roomPagingRxjava3" }
+room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "roomRxjava3" }
+room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

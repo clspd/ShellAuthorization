@@ -66,8 +66,9 @@
     <string name="i_see">I see</string>
     <string name="fragment_container_label">Fragment Container Page</string>
     <string name="fragment_container2_label">Fragment Dialog Container Page</string>
-    <string name="fragment_add_shell_provider_title">Add shell provider</string>
     <string name="Close">Close</string>
+    <string name="Content">Content</string>
+    <string name="fragment_add_shell_provider_title">Add shell provider</string>
     <string name="shell_shizuku_fail_auth_noinstall_title">Cannot use Shizuku</string>
     <string name="shell_shizuku_fail_auth_noinstall_content">Either you did not install Shizuku application or you refused me to query all packages, so I cannot continue.\nDo you want to download Shizuku now?</string>
     <string name="shell_shizuku_fail_auth_noinstall_install">Download</string>
@@ -103,4 +104,19 @@
     <string name="apps_reverse_order">Reverse order</string>
     <string name="apps_exclude_system">Exclude system apps</string>
     <string name="apps_exclude_non_launchable">Exclude non-launchable apps</string>
+    <string name="edit_template_template_name">Template name:</string>
+    <string name="fragment_edit_template_title">Edit Template</string>
+    <string name="edit_template_shell_provider">Shell Provider:</string>
+    <string name="edit_template_user_profile">User profile:</string>
+    <string name="edit_template_user_profile_default">Default</string>
+    <string name="edit_template_user_profile_use_template">Template: %1$s</string>
+    <string name="edit_template_user_profile_custom">Custom</string>
+    <string name="edit_template_user_profile_edit">Edit</string>
+    <string name="edit_template_shell_command_prompt">Shell Command</string>
+    <string name="edit_template_shell_command_placeholder">Input shell command template here</string>
+    <string name="edit_template_shell_command_hint">Hint:\nUse \"$@\" to forward arguments (currently there is no POSIX parser, only the \"$@\" itself can be processed)\nUse \\$ to write $</string>
+    <string name="edit_template_delete_template">Delete</string>
+    <string name="edit_template_save">Save</string>
+    <string name="edit_template_no_shell_provider_title">No shell provider</string>
+    <string name="edit_template_no_shell_provider_content">You need to set up a shell provider before you can edit a template.</string>
 </resources>

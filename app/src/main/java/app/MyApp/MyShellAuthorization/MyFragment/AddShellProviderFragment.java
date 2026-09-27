@@ -31,7 +31,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
@@ -43,6 +42,7 @@ import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.DataHelper;
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.ModeChanger;
 import app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderDeclaration;
+import app.MyApp.MyShellAuthorization.MyDataStructures.ShellsDatabase;
 import top.clspd.shellauthorization.R;
 
 /**
@@ -236,15 +236,7 @@ public class AddShellProviderFragment extends Fragment {
     }
 
     private void saveRootProviderAndFinish(String su) {
-        File sp = new File(MyDataDirectory.get(), "shells");
-        if (!sp.exists()) if (!sp.mkdir()) throw new RuntimeException("Cannot mkdir");
-        try {
-            ShellProviderDeclaration.createRoot(su).write(new File(sp, ShellProviderDeclaration.TYPE_ROOT));
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot write file", e);
-        }
-        requireActivity().setResult(Activity.RESULT_OK);
-        requireActivity().finish();
+        saveProviderAndFinish(ShellProviderDeclaration.createRoot(su));
     }
 
     private void saveShizukuProviderAndFinish() {
@@ -256,16 +248,19 @@ public class AddShellProviderFragment extends Fragment {
         } catch (PackageManager.NameNotFoundException e) {
             return;
         }
+        saveProviderAndFinish(ShellProviderDeclaration.createShizuku(sv));
+    }
 
-        File sp = new File(MyDataDirectory.get(), "shells");
-        if (!sp.exists()) if (!sp.mkdir()) throw new RuntimeException("Cannot mkdir");
-        try {
-            ShellProviderDeclaration.createShizuku(sv).write(new File(sp, ShellProviderDeclaration.TYPE_SHIZUKU));
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot write file", e);
-        }
-        requireActivity().setResult(Activity.RESULT_OK);
-        requireActivity().finish();
+    private void saveProviderAndFinish(ShellProviderDeclaration declaration) {
+        Context appContext = requireContext().getApplicationContext();
+        Activity activity = requireActivity();
+        new Thread(() -> {
+            ShellsDatabase.get(appContext).shellProviderDao().insert(declaration);
+            activity.runOnUiThread(() -> {
+                activity.setResult(Activity.RESULT_OK);
+                activity.finish();
+            });
+        }).start();
     }
 
     private void extractFromApk(String apkPath, String entryPath, File outFile) throws Exception {

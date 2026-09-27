@@ -16,16 +16,13 @@ import android.widget.TextView;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 
-import app.AppLogic.MainAppLogic.MyShellAuthorization.MyDataDirectory;
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
 import app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderDeclaration;
+import app.MyApp.MyShellAuthorization.MyDataStructures.ShellsDatabase;
 import top.clspd.shellauthorization.R;
 
 /**
@@ -80,7 +77,7 @@ public class ShellProvidersFragment extends Fragment {
 
     private void showShellProviderDetails(ShellProviderDeclaration item) {
         Bundle args = new Bundle();
-        args.putString(ShellProviderDetailsFragment.ARG_FILE, item.file.getAbsolutePath());
+        args.putString(ShellProviderDetailsFragment.ARG_NAME, item.name);
         startActivity(app.MyApp.MyCommon.MySupport.MyFragmentContainer.FragmentDialogContainerActivity.createIntent(requireContext(),
                 ShellProviderDetailsFragment.class, args,
                 ShellProviderDetailsFragment.getTitle(requireContext()), true));
@@ -94,18 +91,16 @@ public class ShellProvidersFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void reloadShellProviders() {
-        items.clear();
-        File dir = new File(MyDataDirectory.get(), "shells");
-        File[] files = dir.listFiles();
-        if (files != null) {
-            Arrays.sort(files, Comparator.comparing(File::getName));
-            for (File f : files) {
-                if (!f.isFile()) continue;
-                ShellProviderDeclaration item = ShellProviderDeclaration.read(f);
-                if (item != null) items.add(item);
-            }
-        }
-        adapter.notifyDataSetChanged();
+        Context appContext = requireContext().getApplicationContext();
+        new Thread(() -> {
+            List<ShellProviderDeclaration> loaded = ShellsDatabase.get(appContext).shellProviderDao().getAll();
+            if (!isAdded()) return;
+            requireActivity().runOnUiThread(() -> {
+                items.clear();
+                items.addAll(loaded);
+                adapter.notifyDataSetChanged();
+            });
+        }).start();
     }
 
     private static class ShellProviderAdapter extends RecyclerView.Adapter<ShellProviderAdapter.ViewHolder> {

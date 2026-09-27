@@ -1,5 +1,6 @@
 package app.MyApp.MyShellAuthorization.MyFragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -15,9 +16,8 @@ import android.widget.Toast;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
-
 import app.MyApp.MyShellAuthorization.MyDataStructures.ShellProviderDeclaration;
+import app.MyApp.MyShellAuthorization.MyDataStructures.ShellsDatabase;
 import top.clspd.shellauthorization.R;
 
 /**
@@ -27,9 +27,9 @@ import top.clspd.shellauthorization.R;
  */
 public class ShellProviderDetailsFragment extends Fragment {
 
-    public static final String ARG_FILE = "file";
+    public static final String ARG_NAME = "name";
 
-    private File file;
+    private String name;
 
     public ShellProviderDetailsFragment() {
         // Required empty public constructor
@@ -49,8 +49,7 @@ public class ShellProviderDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            String path = getArguments().getString(ARG_FILE);
-            if (path != null) file = new File(path);
+            name = getArguments().getString(ARG_NAME);
         }
     }
 
@@ -65,13 +64,23 @@ public class ShellProviderDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ShellProviderDeclaration declaration = file == null ? null : ShellProviderDeclaration.read(file);
-        if (declaration == null) {
-            Toast.makeText(requireContext(), getString(R.string.invalid_parameter_error), Toast.LENGTH_SHORT).show();
-            requireActivity().finish();
-            return;
-        }
+        Context appContext = requireContext().getApplicationContext();
+        new Thread(() -> {
+            ShellProviderDeclaration declaration = name == null ? null
+                    : ShellsDatabase.get(appContext).shellProviderDao().getByName(name);
+            if (!isAdded()) return;
+            requireActivity().runOnUiThread(() -> {
+                if (declaration == null) {
+                    Toast.makeText(requireContext(), getString(R.string.invalid_parameter_error), Toast.LENGTH_SHORT).show();
+                    requireActivity().finish();
+                    return;
+                }
+                showDeclaration(view, declaration);
+            });
+        }).start();
+    }
 
+    private void showDeclaration(View view, ShellProviderDeclaration declaration) {
         TextView type = view.findViewById(R.id.textView_shellProviderType);
         TextView info = view.findViewById(R.id.textView_shellProviderInfo);
         switch (declaration.type) {
@@ -95,11 +104,17 @@ public class ShellProviderDetailsFragment extends Fragment {
             new AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.are_you_sure_ask))
                 .setMessage(getString(R.string.shell_provider_delete_confirm))
-                .setPositiveButton(getString(R.string.Yes), (dialog, which) -> {
-                    if (file != null) file.delete();
-                    requireActivity().finish();
-                })
+                .setPositiveButton(getString(R.string.Yes), (dialog, which) -> deleteAndFinish())
                 .setNegativeButton(getString(R.string.No), null)
                 .show());
+    }
+
+    private void deleteAndFinish() {
+        Context appContext = requireContext().getApplicationContext();
+        Activity activity = requireActivity();
+        new Thread(() -> {
+            ShellsDatabase.get(appContext).shellProviderDao().deleteByName(name);
+            activity.runOnUiThread(activity::finish);
+        }).start();
     }
 }

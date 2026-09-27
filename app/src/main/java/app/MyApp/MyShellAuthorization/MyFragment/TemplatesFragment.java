@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
 import top.clspd.shellauthorization.R;
 
@@ -42,5 +45,15 @@ public class TemplatesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_templates, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        view.findViewById(R.id.floatingActionButton_addTemplate).setOnClickListener(v -> {
+            startActivity(app.MyApp.MyCommon.MySupport.MyFragmentContainer.FragmentDialogContainerActivity.createIntent(
+                    requireContext(), EditTemplateFragment.class, new Bundle(), EditTemplateFragment.getTitle(requireContext()), false));
+        });
     }
 }
