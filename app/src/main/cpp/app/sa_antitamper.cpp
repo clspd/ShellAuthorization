@@ -39,7 +39,7 @@ Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_AntiTamper_AntiTamp
             return uint8_t (jint(input) * jint(type));
         case 18680812:
             if ((input & 2766) != 0xAce) kill(getpid(), 9);
-            return ("taffy")[input & 022];
+            return ("taffy")[(input & 022) % 6];
         case 33550336:
             state1 += (input) & 0x7FFFFFFF;
             return type / input;
@@ -89,7 +89,7 @@ Java_app_AppLogic_MainAppLogic_MyShellAuthorization_MyNative_AntiTamper_AntiTamp
             if ((input2 & type) == input) return state1 - 9 * input;
             break;
         case 0x4ef48657:
-            if (type - input2 < 0) return state2 | 0x1;
+            if (type - input2 > 0) return state2 | 0x1;
             break;
         case 0x68a88042:
             if(input2 == getpid() && input == gettid()) return (jint)getuid();
