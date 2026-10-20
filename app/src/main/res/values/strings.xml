@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Shell Authorization</string>
     <string name="title_activity_license">License</string>
     <!-- Strings used for fragments for navigation -->
@@ -62,6 +62,7 @@
     <string name="Yes">Yes</string>
     <string name="No">No</string>
     <string name="Cancel">Cancel</string>
+    <string name="Continue">Continue</string>
     <string name="uninstall_the_app_confirm">Are you sure you want to uninstall this application?\nThis is unrevertable and all of your configurations will be lost.</string>
     <string name="i_see">I see</string>
     <string name="fragment_container_label">Fragment Container Page</string>
@@ -135,4 +136,16 @@
     <string name="shell_shizuku_fail_illegal_shizuku_content">Cannot use Shizuku because the Shizuku installed on your device seems to be illegal. If you installed non-official Shizuku, your data and your runtime might be no longer safe.\nPlease install Shizuku from legal sources and try again.</string>
     <string name="fragment_edit_user_profile_title">Edit User Profile</string>
     <string name="edit_user_profile_top_hint">Tip: Most features here require root access.</string>
+    <string name="home_get_started_title">Get Started</string>
+    <string name="home_get_started_desc">Learn how to use the application. (Online)</string>
+    <string name="home_get_started_action">Get Started</string>
+    <string name="home_get_runner_title">Get Shell</string>
+    <string name="home_get_runner_desc">Export the shell runner to your shell application.</string>
+    <string name="home_get_runner_action">Get Shell</string>
+    <string name="open_online_content_confirm_title">Online Content</string>
+    <string name="open_online_content_confirm_message">You are about to open an online content. This will connect to Internet and might send your data to your Internet service provider.\nThe Uniform Resource Identifier of the content is as follows:\n%1$s\nAre you sure you want to continue?</string>
+    <string name="get_runner_dialog_title">Get Shell</string>
+    <string name="get_runner_dialog_content" tools:ignore="TypographyDashes">Next we will open two save file dialogs by using Storage Access Framework. The first file is the runtime library and the second file is a command wrapper. We recommend you not to change their names.\nAfter that, you can put these files to your terminal application. By running the wrapper script using a shell, you can run commands using Shell Authorization. To learn more, you can use --help argument.\nIf you are ready, you can click Continue button.</string>
+    <string name="Success">Success</string>
+    <string name="Failed">Failed</string>
 </resources>

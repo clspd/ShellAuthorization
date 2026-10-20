@@ -16,6 +16,8 @@
 
 -keep class * extends androidx.fragment.app.Fragment { *; }
 
+-keep class top.clspd.shellauthorization.Public.** { *; }
+
 -keep class * implements top.clspd.shellauthorization.Shared.ShellProvider.intf.ShellProviderInterface { *; }
 -keep interface top.clspd.shellauthorization.Shared.ShellProvider.intf.** { *; }
 -keepclassmembers class * implements top.clspd.shellauthorization.Shared.ShellProvider.intf.ShellProviderInterface {
