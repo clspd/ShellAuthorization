@@ -95,9 +95,12 @@
     <string name="shell_provider_delete">Delete provider</string>
     <string name="shell_provider_delete_confirm">Are you sure you want to delete this shell provider?</string>
     <string name="app_allow">Allow</string>
+    <string name="application_uid_label">User %1$d</string>
     <string name="fragment_application_detail_title">Application details</string>
+    <string name="application_detail_name_with_uid">%1$s (%2$d)</string>
+    <string name="application_detail_shared_packages_more">%1$s and %2$d more…</string>
     <string name="apps_options">Options</string>
-    <string name="apps_filter_hint">Filter by name or package</string>
+    <string name="apps_filter_hint">Filter by name, package or UID</string>
     <string name="apps_sort_by">Sort by</string>
     <string name="apps_sort_by_name">Application name</string>
     <string name="apps_sort_by_package">Package name</string>

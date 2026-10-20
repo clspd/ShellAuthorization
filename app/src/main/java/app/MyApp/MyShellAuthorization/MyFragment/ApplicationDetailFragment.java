@@ -2,6 +2,7 @@ package app.MyApp.MyShellAuthorization.MyFragment;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -19,12 +20,11 @@ import android.widget.Toast;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
-import app.AppLogic.MainAppLogic.MyShellAuthorization.MyDataDirectory;
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
-import app.MyApp.MyShellAuthorization.MyDataStructures.AllowDeclaration;
+import app.MyApp.MyShellAuthorization.MyDataStructures.UidAuthorizationStore;
+import app.MyApp.MyShellAuthorization.MyDataStructures.UidPackages;
 import top.clspd.shellauthorization.R;
 
 /**
@@ -34,9 +34,15 @@ import top.clspd.shellauthorization.R;
  */
 public class ApplicationDetailFragment extends Fragment {
 
+    public static final String ARG_UID = "uid";
+    /**
+     * The package the user tapped. Used only to decide which package is shown first; the
+     * authorization itself is keyed by UID.
+     */
     public static final String ARG_PACKAGE = "package";
 
-    private String packageName;
+    private int uid = -1;
+    private String preferredPackageName;
 
     public ApplicationDetailFragment() {
         // Required empty public constructor
@@ -57,7 +63,8 @@ public class ApplicationDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             AntiTamper.AntiTamper_ValueMustWithin2(1324648023, android.os.Process.myTid(), -153716086, 409470690, 432123789);
-            packageName = getArguments().getString(ARG_PACKAGE);
+            uid = getArguments().getInt(ARG_UID, -1);
+            preferredPackageName = getArguments().getString(ARG_PACKAGE);
         }
     }
 
@@ -73,14 +80,9 @@ public class ApplicationDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         PackageManager pm = requireContext().getPackageManager();
-        ApplicationInfo appInfo = null;
-        if (packageName != null) {
-            try {
-                appInfo = pm.getApplicationInfo(packageName, 0);
-            } catch (PackageManager.NameNotFoundException ignored) {
-            }
-        }
-        if (appInfo == null) {
+        List<PackageInfo> packages = uid > 0 ? UidPackages.packagesForUid(pm, uid) : null;
+        PackageInfo primary = packages == null ? null : findPreferred(packages);
+        if (packages == null || packages.isEmpty() || primary == null) {
             Toast.makeText(requireContext(), getString(R.string.invalid_parameter_error), Toast.LENGTH_SHORT).show();
             requireActivity().finish();
             return;
@@ -89,56 +91,47 @@ public class ApplicationDetailFragment extends Fragment {
         ImageView icon = view.findViewById(R.id.imageView_appIcon);
         TextView name = view.findViewById(R.id.textView_appName);
         TextView packageView = view.findViewById(R.id.textView_appPackage);
-        icon.setImageDrawable(appInfo.loadIcon(pm));
-        name.setText(appInfo.loadLabel(pm));
-        packageView.setText(packageName);
+
+        ApplicationInfo appInfo = primary.applicationInfo;
+        if (appInfo != null) {
+            icon.setImageDrawable(appInfo.loadIcon(pm));
+            name.setText(getString(R.string.application_detail_name_with_uid, appInfo.loadLabel(pm), uid));
+        } else {
+            icon.setImageResource(android.R.drawable.sym_def_app_icon);
+            name.setText(getString(R.string.application_detail_name_with_uid, primary.packageName, uid));
+        }
+
+        int more = packages.size() - 1;
+        if (more > 0) {
+            packageView.setText(getString(R.string.application_detail_shared_packages_more, primary.packageName, more));
+        } else {
+            packageView.setText(primary.packageName);
+        }
 
         SwitchCompat allow = view.findViewById(R.id.switch_allow);
-        allow.setChecked(allowFile().exists());
+        allow.setChecked(UidAuthorizationStore.get().isAuthorized(pm, uid));
         allow.setOnCheckedChangeListener((btn, checked) -> {
-            if (checked) restoreOrCreateAllowFile();
-            else recycleAllowFile();
-            btn.setChecked(allowFile().exists());
+            boolean success;
+            if (checked) {
+                success = UidAuthorizationStore.get().authorize(pm, uid);
+                if (!success) {
+                    Log.e("ApplicationDetailFragment", "Cannot authorize UID " + uid);
+                    Toast.makeText(requireContext(), getString(R.string.Failed), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                UidAuthorizationStore.get().revoke(uid);
+                success = true;
+            }
+            btn.setChecked(success && UidAuthorizationStore.get().isAuthorized(pm, uid));
         });
     }
 
-    private File allowFile() {
-        return new File(new File(MyDataDirectory.get(), "allowlist"), packageName);
-    }
-
-    private File recycledAllowFile() {
-        return new File(new File(new File(MyDataDirectory.get(), "Recycle.Bin"), "allowlist"), packageName);
-    }
-
-    private void restoreOrCreateAllowFile() {
-        File allow = allowFile();
-        File recycled = recycledAllowFile();
-        // restore the recycled allow file so that its content is kept
-        if (recycled.exists()) {
-            if (!recycled.renameTo(allow)) Log.e("ApplicationDetailFragment", "Cannot restore " + recycled);
-            return;
+    private PackageInfo findPreferred(List<PackageInfo> packages) {
+        if (preferredPackageName != null) {
+            for (PackageInfo pkg : packages) {
+                if (preferredPackageName.equals(pkg.packageName)) return pkg;
+            }
         }
-        File dir = allow.getParentFile();
-        if (!dir.exists()) if (!dir.mkdirs()) {
-            Log.e("ApplicationDetailFragment", "Cannot mkdir " + dir);
-            return;
-        }
-        try {
-            AllowDeclaration.create(packageName).write(allow);
-        } catch (IOException e) {
-            Log.e("ApplicationDetailFragment", e.toString());
-        }
-    }
-
-    private void recycleAllowFile() {
-        File allow = allowFile();
-        if (!allow.exists()) return;
-        File recycled = recycledAllowFile();
-        File dir = recycled.getParentFile();
-        if (!dir.exists()) if (!dir.mkdirs()) {
-            Log.e("ApplicationDetailFragment", "Cannot mkdir " + dir);
-            return;
-        }
-        if (!allow.renameTo(recycled)) Log.e("ApplicationDetailFragment", "Cannot recycle " + allow);
+        return UidPackages.primary(packages);
     }
 }

@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -39,6 +40,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyNative.AntiTamper;
+import app.MyApp.MyShellAuthorization.MyDataStructures.UidAuthorizationStore;
 import top.clspd.shellauthorization.R;
 
 /**
@@ -127,6 +129,7 @@ public class AppsListFragment extends Fragment {
 
     private void showApplicationDetail(AppItem item) {
         Bundle args = new Bundle();
+        args.putInt(ApplicationDetailFragment.ARG_UID, item.uid);
         args.putString(ApplicationDetailFragment.ARG_PACKAGE, item.packageName);
         startActivity(app.MyApp.MyCommon.MySupport.MyFragmentContainer.FragmentDialogContainerActivity.createIntent(requireContext(),
                 ApplicationDetailFragment.class, args,
@@ -196,6 +199,11 @@ public class AppsListFragment extends Fragment {
         swipeRefresh.post(() -> swipeRefresh.setRefreshing(true));
         PackageManager pm = requireContext().getPackageManager();
         new Thread(() -> {
+            try {
+                UidAuthorizationStore.get().pruneInvalid(pm);
+            } catch (RuntimeException e) {
+                Log.e("AppsListFragment", "Cannot prune invalid authorizations", e);
+            }
             List<AppItem> loaded = loadInstalledApps(pm);
             if (!isAdded()) return;
             requireActivity().runOnUiThread(() -> {
@@ -217,6 +225,7 @@ public class AppsListFragment extends Fragment {
             ApplicationInfo appInfo = pkg.applicationInfo;
             if (appInfo == null) continue;
             result.add(new AppItem(
+                    appInfo.uid,
                     appInfo.loadLabel(pm).toString(),
                     pkg.packageName,
                     appInfo.loadIcon(pm),
@@ -242,7 +251,8 @@ public class AppsListFragment extends Fragment {
             if (excludeNonLaunchable && !item.launchable) continue;
             if (!query.isEmpty()
                     && !item.name.toLowerCase(Locale.ROOT).contains(query)
-                    && !item.packageName.toLowerCase(Locale.ROOT).contains(query)) continue;
+                    && !item.packageName.toLowerCase(Locale.ROOT).contains(query)
+                    && !String.valueOf(item.uid).contains(query)) continue;
             items.add(item);
         }
 
@@ -270,6 +280,7 @@ public class AppsListFragment extends Fragment {
     }
 
     private static class AppItem {
+        final int uid;
         final String name;
         final String packageName;
         final Drawable icon;
@@ -278,7 +289,8 @@ public class AppsListFragment extends Fragment {
         final boolean system;
         final boolean launchable;
 
-        AppItem(String name, String packageName, Drawable icon, long installTime, long updateTime, boolean system, boolean launchable) {
+        AppItem(int uid, String name, String packageName, Drawable icon, long installTime, long updateTime, boolean system, boolean launchable) {
+            this.uid = uid;
             this.name = name;
             this.packageName = packageName;
             this.icon = icon;
@@ -311,6 +323,7 @@ public class AppsListFragment extends Fragment {
             holder.icon.setImageDrawable(item.icon);
             holder.name.setText(item.name);
             holder.packageName.setText(item.packageName);
+            holder.uid.setText(holder.itemView.getContext().getString(R.string.application_uid_label, item.uid));
             holder.itemView.setOnClickListener(v -> onItemClick.accept(item));
         }
 
@@ -323,12 +336,14 @@ public class AppsListFragment extends Fragment {
             final ImageView icon;
             final TextView name;
             final TextView packageName;
+            final TextView uid;
 
             ViewHolder(View itemView) {
                 super(itemView);
                 icon = itemView.findViewById(R.id.imageView_appIcon);
                 name = itemView.findViewById(R.id.textView_appName);
                 packageName = itemView.findViewById(R.id.textView_appPackage);
+                uid = itemView.findViewById(R.id.textView_appUid);
             }
         }
     }
