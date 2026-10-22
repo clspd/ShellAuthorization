@@ -4,10 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.Parcel
+import android.util.Log
 
 object ShellRequestHandler {
 
     fun handleRequest(context: Context, intent: Intent): Boolean {
+        Log.i("ShellRequestHandler", "Handling request, action = " + intent.action)
+
         if (intent.action != "top.clspd.shellauthorization.intent.action.REQUEST_BINDER") {
             return false
         }
