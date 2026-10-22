@@ -2,6 +2,8 @@ package app.MyApp.MyShellAuthorization.MyFragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -11,6 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +81,17 @@ public class HomeFragment extends Fragment {
         });
 
         view.findViewById(R.id.button_getShell).setOnClickListener(v -> {
+            PackageManager packageManager = requireContext().getPackageManager();
+            ApplicationInfo app;
+            try {
+                app = packageManager.getApplicationInfo(requireContext().getPackageName(), 0);
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.e("HomeFragment", e.toString());
+                Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                return;
+            }
+            String alt = "/system/bin/app_process -Djava.class.path=" + app.sourceDir + " /system/bin top.clspd.shellauthorization.Public.Shell.ShellLauncher ";
+
             new AlertDialog.Builder(requireContext())
                     .setTitle(R.string.get_runner_dialog_title)
                     .setMessage(R.string.get_runner_dialog_content)
@@ -89,6 +103,12 @@ public class HomeFragment extends Fragment {
                         exportShellRunner_stage1.launch(intent);
                     }))
                     .setNegativeButton(R.string.Cancel, null)
+                    /*.setNeutralButton(R.string.get_runner_dialog_alternative_method, ((dialog, which) ->
+                            new AlertDialog.Builder(requireContext()).setTitle(R.string.get_runner_dialog_title).setMessage(requireContext().getString(R.string.get_runner_dialog_alternative_content, alt)).setPositiveButton(R.string.Copy, ((dialog1, which1) -> {
+                                android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager) requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE);
+                                android.content.ClipData clipData = android.content.ClipData.newPlainText("label", alt);
+                                clipboardManager.setPrimaryClip(clipData);
+                            })).setNegativeButton(R.string.Cancel, null).show()))*/
                     .show();
         });
     }
@@ -113,6 +133,7 @@ public class HomeFragment extends Fragment {
                         }
                         os.flush();
                     } catch (Exception e) {
+                        Log.e("HomeFragment", e.toString());
                         Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                         return;
                     }
@@ -141,6 +162,7 @@ public class HomeFragment extends Fragment {
                         }
                         os.flush();
                     } catch (Exception e) {
+                        Log.e("HomeFragment", e.toString());
                         Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                         return;
                     }

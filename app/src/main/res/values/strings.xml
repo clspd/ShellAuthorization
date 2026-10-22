@@ -151,4 +151,7 @@
     <string name="get_runner_dialog_content" tools:ignore="TypographyDashes">Next we will open two save file dialogs by using Storage Access Framework. The first file is the runtime library and the second file is a command wrapper. We recommend you not to change their names.\nAfter that, you can put these files to your terminal application. By running the wrapper script using a shell, you can run commands using Shell Authorization. To learn more, you can use --help argument.\nIf you are ready, you can click Continue button.</string>
     <string name="Success">Success</string>
     <string name="Failed">Failed</string>
+    <string name="get_runner_dialog_alternative_method">Alternative Method...</string>
+    <string name="get_runner_dialog_alternative_content">You can use the alternative method if you are having trouble using the recommended method, but after every update of this application you will need to reconfigure the method.\nThe alternative method is:\n\n%1$s\n\nDo you want to copy it?</string>
+    <string name="Copy">Copy</string>
 </resources>

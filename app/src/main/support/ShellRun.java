@@ -1,102 +1,235 @@
 package top.clspd.shellauthorization.Public.Shell;
 
-import android.content.pm.PackageInfo;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
-import android.os.Process;
-import android.system.Os;
+import android.os.Looper;
+import android.os.Parcel;
+import android.os.RemoteException;
+import android.text.TextUtils;
 
+import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Objects;
+import java.util.concurrent.TimeoutException;
+
+import dalvik.system.BaseDexClassLoader;
 
 public class ShellRun {
-
-    private static final String DEFAULT_PKG = "top.clspd.shellauthorization";
-    private static final String LAUNCHER = "top.clspd.shellauthorization.Public.Shell.ShellLauncher";
-
     public static void main(String[] args) {
-        String pkg = System.getenv().getOrDefault(
-                "SHELL_AUTHORIZATION_APPLICATION_NAME", DEFAULT_PKG);
         try {
-            String base = baseApkPath(pkg);
+            System.exit(RealMain(args));
+        }
+        catch (Exception e) {
+            e.printStackTrace(System.err);
+            System.err.flush();
+            throw new RuntimeException(e);
+        }
+    }
 
-            String path = "/system/bin/app_process";
-            String[] argv = new String[4 + args.length];
-            argv[0] = "app_process";
-            argv[1] = "-Djava.class.path=" + base;
-            argv[2] = "/system/bin";
-            argv[3] = LAUNCHER;
-            System.arraycopy(args, 0, argv, 4, args.length);
-            Os.execve(path, argv, Os.environ());
-        } catch (Exception e) {
-            e.printStackTrace();
+
+    private static String[] args;
+    private static Handler handler;
+
+    private static final Binder binder = new Binder() {
+
+        @Override
+        protected boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1) {
+                IBinder binder = data.readStrongBinder();
+
+                String sourceDir = data.readString();
+                if (binder != null && sourceDir != null) {
+                    handler.post(() -> {
+                        try {
+                            onBinderReceived(binder, sourceDir);
+                        } catch (Exception e) {
+                            e.printStackTrace(System.err);
+                            System.err.flush();
+                            System.exit(1);
+                        }
+                    });
+                } else {
+                    System.err.println("Cannot connect");
+                    System.err.flush();
+                    System.exit(1);
+                }
+                return true;
+            }
+            return super.onTransact(code, data, reply, flags);
+        }
+    };
+
+    private static int RealMain(String[] _args) throws Exception {
+        args = _args;
+
+        if (Looper.myLooper() == null) {
+            Looper.prepare();
+        }
+
+        try { tryExemptHiddenApis(); } catch (Exception ignored) {}
+
+        handler = new Handler(Objects.requireNonNull(Looper.myLooper()));
+
+        requestBinder();
+
+        handler.postDelayed(() -> abort(new TimeoutException("Timeout").toString()), 5000);
+
+        Looper.loop();
+
+        return 0;
+    }
+
+    @SuppressLint("DiscouragedPrivateApi")
+    private static void tryExemptHiddenApis() throws Exception {
+        Class<?> vmRuntimeClass = Class.forName("dalvik.system.VMRuntime");
+
+        Method getRuntime = vmRuntimeClass.getDeclaredMethod("getRuntime");
+
+        Object runtime = getRuntime.invoke(null);
+
+        Method setExemptions =
+                vmRuntimeClass.getDeclaredMethod(
+                        "setHiddenApiExemptions",
+                        String[].class
+                );
+
+        setExemptions.invoke(
+                runtime,
+                (Object) new String[]{"L"}
+        );
+    }
+
+    @SuppressLint({"ObsoleteSdkInt", "PrivateApi", "DiscouragedPrivateApi", "SoonBlockedPrivateApi"})
+    private static void requestBinder() throws Exception {
+        Bundle data = new Bundle();
+        data.putBinder("binder", binder);
+
+        String pkg = System.getenv().getOrDefault("SHELL_AUTHORIZATION_APPLICATION_NAME", "top.clspd.shellauthorization");
+
+        Intent intent = new Intent("top.clspd.shellauthorization.intent.action.REQUEST_BINDER")
+                .setPackage(pkg)
+                .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                .putExtra("data", data);
+
+        // android.os.ServiceManager.getService("activity")
+        Class<?> serviceManagerClass = Class.forName("android.os.ServiceManager");
+        Method getService = serviceManagerClass.getDeclaredMethod("getService", String.class);
+
+        IBinder amBinder = (IBinder) getService.invoke(null, "activity");
+        if (amBinder == null) {
+            throw new IllegalStateException(
+                    "ActivityManager service is unavailable"
+            );
+        }
+
+        // android.app.IActivityManager.Stub.asInterface(IBinder)
+        Class<?> stubClass = Class.forName("android.app.IActivityManager$Stub");
+        Method asInterface = stubClass.getDeclaredMethod(
+                "asInterface",
+                IBinder.class
+        );
+
+        Object am = asInterface.invoke(null, amBinder);
+
+        Class<?> activityManagerClass =
+                Class.forName("android.app.IActivityManager");
+
+        Method broadcastIntent = findBroadcastIntentMethod(
+                activityManagerClass
+        );
+
+        // broadcastIntent will fail on Android 8.x but our minSdk is 28
+        broadcastIntent.invoke(
+                am,
+                null,       // IApplicationThread caller
+                intent,     // Intent intent
+                null,       // String resolvedType
+                null,       // IIntentReceiver resultTo
+                0,          // int resultCode
+                null,       // String resultData
+                null,       // Bundle map
+                null,       // String[] requiredPermissions
+                -1,         // int appOp
+                null,       // Bundle options
+                true,       // boolean serialized
+                false,      // boolean sticky
+                0           // int userId
+        );
+
+    }
+
+    private static Method findBroadcastIntentMethod(
+            Class<?> activityManagerClass
+    ) throws NoSuchMethodException {
+
+        for (Method method : activityManagerClass.getDeclaredMethods()) {
+            if (!"broadcastIntent".equals(method.getName())) {
+                continue;
+            }
+
+            Class<?>[] p = method.getParameterTypes();
+
+            if (p.length == 13
+                    && p[1] == Intent.class
+                    && p[4] == int.class
+                    && p[8] == int.class
+                    && p[10] == boolean.class
+                    && p[11] == boolean.class
+                    && p[12] == int.class) {
+                return method;
+            }
+        }
+
+        throw new NoSuchMethodException(
+                "Cannot find compatible IActivityManager.broadcastIntent"
+        );
+    }
+
+    private static void onBinderReceived(IBinder binder, String sourceDir) throws Exception {
+        var base = sourceDir.substring(0, sourceDir.lastIndexOf('/'));
+        String librarySearchPath = base + "/lib/" + getRuntimeInstructionSet();
+        String systemLibrarySearchPath = System.getProperty("java.library.path");
+        if (!TextUtils.isEmpty(systemLibrarySearchPath)) {
+            librarySearchPath += File.pathSeparatorChar + systemLibrarySearchPath;
+        }
+
+        try {
+            var classLoader = new BaseDexClassLoader(sourceDir, null, librarySearchPath, ClassLoader.getSystemClassLoader());
+            Class<?> cls = classLoader.loadClass("top.clspd.shellauthorization.Public.Shell.ShellLauncher");
+            cls.getDeclaredMethod("main", String[].class, IBinder.class, Handler.class)
+                    .invoke(null, args, binder, handler);
+        } catch (ClassNotFoundException e) {
+            System.err.println("Class not found");
+            System.err.flush();
+            System.exit(1);
+        } catch (Throwable e) {
+            e.printStackTrace(System.err);
+            System.err.flush();
             System.exit(1);
         }
     }
 
-    public static String baseApkPath(String pkg) throws Exception {
-        PackageInfo pi = getPackageInfo(pkg);
-        if (pi == null || pi.applicationInfo == null) {
-            throw new IllegalStateException("package not found: " + pkg);
-        }
-        return pi.applicationInfo.sourceDir;
+    @SuppressLint("DiscouragedPrivateApi")
+    private static String getRuntimeInstructionSet() throws Exception {
+        Class<?> vmRuntimeClass = Class.forName("dalvik.system.VMRuntime");
+
+        Method getRuntime = vmRuntimeClass.getDeclaredMethod("getRuntime");
+
+        Object runtime = getRuntime.invoke(null);
+
+        Method vmInstructionSet = vmRuntimeClass.getDeclaredMethod("vmInstructionSet");
+
+        return (String) vmInstructionSet.invoke(runtime);
     }
 
-    private static PackageInfo getPackageInfo(String pkg) throws Exception {
-        Object ipm = ipm();
-        Class<?> ic = Class.forName("android.content.pm.IPackageManager");
-
-        for (Method m : ic.getDeclaredMethods()) {
-            if (!m.getName().equals("getPackageInfo")) continue;
-            Class<?>[] pt = m.getParameterTypes();
-            if (pt.length != 3) continue;
-            m.setAccessible(true);
-            return (PackageInfo) m.invoke(ipm, pkg, zeroFlags(pt[1]), userId());
-        }
-        throw new NoSuchMethodException("IPackageManager.getPackageInfo(String,?,int)");
+    private static void abort(String message) {
+        System.err.println(message);
+        System.err.flush();
+        System.exit(1);
     }
 
-    private static Object ipm() throws Exception {
-        try {
-            Method m = Class.forName("android.app.AppGlobals")
-                    .getDeclaredMethod("getPackageManager");
-            m.setAccessible(true);
-            Object r = m.invoke(null);
-            if (r != null) return r;
-        } catch (Throwable ignored) {}
-
-        Class<?> sm = Class.forName("android.os.ServiceManager");
-        Method getService = sm.getDeclaredMethod("getService", String.class);
-        getService.setAccessible(true);
-        IBinder binder = (IBinder) getService.invoke(null, "package");
-        if (binder == null) throw new IllegalStateException("no package service");
-
-        Class<?> stub = Class.forName("android.content.pm.IPackageManager$Stub");
-        Method asInterface = stub.getDeclaredMethod("asInterface", IBinder.class);
-        asInterface.setAccessible(true);
-        return asInterface.invoke(null, binder);
-    }
-
-    private static int userId() {
-        try {
-            return (Integer) Class.forName("android.os.UserHandle")
-                    .getMethod("getUserId", int.class)
-                    .invoke(null, Process.myUid());
-        } catch (Throwable t) {
-            return Process.myUid() / 100000;
-        }
-    }
-
-    private static Object zeroFlags(Class<?> t) throws Exception {
-        if (t == int.class || t == Integer.class) return 0;
-        if (t == long.class || t == Long.class) return 0L;
-
-        if (t.getName().endsWith("PackageInfoFlags")) {
-            try {
-                return Class.forName("android.content.pm.PackageManager$PackageInfoFlags")
-                        .getMethod("of", long.class).invoke(null, 0L);
-            } catch (Throwable ignored) {}
-            return Class.forName("android.content.pm.PackageInfoFlags")
-                    .getMethod("of", long.class).invoke(null, 0L);
-        }
-        throw new IllegalArgumentException("unexpected AIDL param: " + t.getName());
-    }
 }
