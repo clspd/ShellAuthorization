@@ -14,12 +14,12 @@ import app.AppLogic.MainAppLogic.MyShellAuthorization.MyDataDirectory;
  *
  * <p>An authorization is only valid while the earliest {@code firstInstallTime} among all packages
  * sharing the UID is unchanged. This catches UID recycling: a newly installed package that received
- * a recycled UID has a different earliest install time, so the authorization is deleted.</p>
+ * a recycled UID has a different earliest installation time, so the authorization is deleted.</p>
  */
 public final class UidAuthorizationStore {
 
     private static final String ALLOWLIST_DIR = "allowlist";
-    private static final String RECYCLE_BIN_DIR = "Recycle.Bin";
+    private static final String RECYCLE_BIN_DIR = ".deleted";
 
     private static volatile UidAuthorizationStore instance;
 

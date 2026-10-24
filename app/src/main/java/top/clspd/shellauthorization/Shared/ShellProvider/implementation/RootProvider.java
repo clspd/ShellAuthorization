@@ -1,5 +1,7 @@
 package top.clspd.shellauthorization.Shared.ShellProvider.implementation;
 
+import android.content.pm.ApplicationInfo;
+
 import androidx.annotation.DrawableRes;
 
 import java.io.BufferedReader;
@@ -163,9 +165,19 @@ public class RootProvider extends ProcessShellProvider {
     }
 
     @Override
-    protected Process startProcess(String startupCommand) throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(su, "-c", startupCommand);
+    protected Process startProcess(String[] startupCommand, String templateName, String profileName) throws IOException {
+        // TODO: implement this using stdin
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+
+        ProcessBuilder builder = new ProcessBuilder(su);
         builder.redirectErrorStream(false);
-        return builder.start();
+        Process p = builder.start();
+
+        DataOutputStream os = new DataOutputStream(p.getOutputStream());
+        os.writeBytes("exec \"" + new File(applicationInfo.nativeLibraryDir, "libshellauthorizationcore.so").getAbsolutePath() + "\" 6881201\n");
+        os.flush();
+        // TODO: load template and profile
+
+        return p;
     }
 }

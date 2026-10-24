@@ -147,13 +147,26 @@ int SetupDataDirectoryStructure(PCSTR lpszDataDirectory) {
     struct stat buf{};
 
     filesystem::path dataDir(lpszDataDirectory);
-    filesystem::path appDataDir = dataDir / APP_DATA_DIR_VER;
 
-    if (E_FAILED(stat(appDataDir.c_str(), &buf))) {
-        if (errno != ENOENT) return errno;
-        if (E_FAILED(mkdir(appDataDir.c_str(), 0700))) return errno;
-    }
-    else if (!S_ISDIR(buf.st_mode)) return EIO;
+    int err = 0;
+    auto InitDir = [&err, &buf] (const filesystem::path& path) -> bool {
+        if (E_FAILED(stat(path.c_str(), &buf))) {
+            if (errno != ENOENT) { err = errno; return false; }
+            if (E_FAILED(mkdir(path.c_str(), 0700))) { err = errno; return false; }
+        }
+        else if (!S_ISDIR(buf.st_mode)) { err = EIO; return false; }
+        return true;
+    };
+
+    filesystem::path appDataDir = dataDir / APP_DATA_DIR_VER;
+    if (!InitDir(appDataDir)) return err;
+
+    if (!InitDir(appDataDir / RECYCLE_BIN_NAME)) return err;
+    if (!InitDir(appDataDir / TEMPORARILY_DATA)) return err;
+    if (!InitDir(appDataDir / TEMP_HIDDEN_DATA)) return err;
+    if (!InitDir(appDataDir / AUTO_BACKUPS_DIR)) return err;
+    if (!InitDir(appDataDir / VENDORS_FILE_DIR)) return err;
+    if (!InitDir(appDataDir / CMD_TEMPLATE_DIR)) return err;
 
     return 0;
 }

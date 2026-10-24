@@ -11,4 +11,8 @@
 extern std::unordered_map<std::string, int(*)(int, char**)> MyIOTable;
 void InitializeMyIOTable();
 
+// util
+
+bool Read(int nFileDescriptor, void* lpData, size_t nSize);
+
 #endif //SHELL_AUTHORIZATION_SAREG_H

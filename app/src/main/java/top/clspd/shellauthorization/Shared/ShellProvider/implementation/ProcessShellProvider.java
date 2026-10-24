@@ -55,17 +55,17 @@ public abstract class ProcessShellProvider implements ShellProviderInterface {
         else new Handler(Looper.getMainLooper()).post(r);
     }
 
-    protected abstract Process startProcess(String startupCommand) throws IOException;
+    protected abstract Process startProcess(String[] startupCommand, String templateName, String profileName) throws IOException;
 
     @Override
-    public void startup(String startupCommand) throws IOException {
+    public void startup(String[] startupCommand, String templateName, String profileName) throws IOException {
         if (process != null) {
             throw new IllegalStateException("already started");
         }
-        if (startupCommand == null || startupCommand.isBlank()) {
+        if (startupCommand == null || startupCommand.length < 1) {
             throw new IllegalArgumentException("empty startupCommand");
         }
-        this.process = startProcess(startupCommand);
+        this.process = startProcess(startupCommand, templateName, profileName);
     }
 
     private Process requireProcess() {

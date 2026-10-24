@@ -34,6 +34,7 @@ import top.clspd.shellauthorization.R;
 import top.clspd.shellauthorization.Shared.ShellProvider.data.ShellProviderParameter;
 import top.clspd.shellauthorization.Shared.ShellProvider.data.ShellProviderSetupAction;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class ShizukuProvider extends ProcessShellProvider {
 
     public static final String PROVIDER_NAME = "shizuku";
@@ -157,7 +158,7 @@ public class ShizukuProvider extends ProcessShellProvider {
             extractFromApk(apk, "assets/rish_shizuku.dex", rishDex);
             ModeChanger.ChangeMode(rishDex.getAbsolutePath(), 0400);
 
-            ProcessBuilder pb = rishCommand(ctx, rishDex, "/system/bin/id");
+            ProcessBuilder pb = rishCommand(ctx, rishDex, new String[]{"/system/bin/id"});
             Log.d("ShizukuProvider", "Launching : " + String.join(" ", pb.command()));
             Process process = pb.start();
             int exitCode;
@@ -250,10 +251,11 @@ public class ShizukuProvider extends ProcessShellProvider {
         }
     }
 
-    private static ProcessBuilder rishCommand(Context ctx, File rishDex, String command) {
+    private static ProcessBuilder rishCommand(Context ctx, File rishDex, String[] command) {
+        // TODO: implement this
         ProcessBuilder pb = new ProcessBuilder("/system/bin/app_process",
                 "-Djava.class.path=" + rishDex.getAbsolutePath(), "/system/bin",
-                "--nice-name=rish_client", DataHelper.getShizukuShellMainClass(), command);
+                "--nice-name=rish_client", DataHelper.getShizukuShellMainClass(), "true");
         Map<String, String> env = pb.environment();
         env.put("RISH_APPLICATION_ID", ctx.getPackageName());
         return pb;
@@ -277,11 +279,13 @@ public class ShizukuProvider extends ProcessShellProvider {
     }
 
     @Override
-    protected Process startProcess(String startupCommand) throws IOException {
+    protected Process startProcess(String[] startupCommand, String templateName, String profileName) throws IOException {
         File rishDex = new File(new File(MyDataDirectory.get(), "shizuku_support"), "rish_shizuku.dex");
         if (!rishDex.exists()) {
             throw new IOException("Shizuku is not set up");
         }
-        return rishCommand(context, rishDex, startupCommand).start();
+        Process process = rishCommand(context, rishDex, startupCommand).start();
+        // TODO: implement...
+        return process;
     }
 }

@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(requireContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 return;
             }
-            String alt = "/system/bin/app_process -Djava.class.path=" + app.sourceDir + " /system/bin top.clspd.shellauthorization.Public.Shell.ShellLauncher ";
+            String alt = "/system/bin/app_process -Djava.class.path=" + app.sourceDir + " /system/bin top.clspd.shellauthorization.Public.Shell.ShellRun ";
 
             new AlertDialog.Builder(requireContext())
                     .setTitle(R.string.get_runner_dialog_title)
@@ -103,12 +103,12 @@ public class HomeFragment extends Fragment {
                         exportShellRunner_stage1.launch(intent);
                     }))
                     .setNegativeButton(R.string.Cancel, null)
-                    /*.setNeutralButton(R.string.get_runner_dialog_alternative_method, ((dialog, which) ->
+                    .setNeutralButton(R.string.get_runner_dialog_alternative_method, ((dialog, which) ->
                             new AlertDialog.Builder(requireContext()).setTitle(R.string.get_runner_dialog_title).setMessage(requireContext().getString(R.string.get_runner_dialog_alternative_content, alt)).setPositiveButton(R.string.Copy, ((dialog1, which1) -> {
                                 android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager) requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE);
                                 android.content.ClipData clipData = android.content.ClipData.newPlainText("label", alt);
                                 clipboardManager.setPrimaryClip(clipData);
-                            })).setNegativeButton(R.string.Cancel, null).show()))*/
+                            })).setNegativeButton(R.string.Cancel, null).show()))
                     .show();
         });
     }

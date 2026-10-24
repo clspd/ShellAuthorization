@@ -26,7 +26,7 @@ public interface ShellProviderInterface extends ShellInterface {
 
     /**
      * Generate provider identifier
-     * for unique providers like RootProvider and ShizukuProvider, this
+     * for unique providers like RootProvider, this
      * returns a determinant value like "root"; for user-customizable provider,
      * this returns a unique thing like a randomly-generated UUID.
      * @return the provider identifier.

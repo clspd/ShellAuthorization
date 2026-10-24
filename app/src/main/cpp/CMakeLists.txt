@@ -28,6 +28,7 @@ project("shellauthorization")
 add_library(${CMAKE_PROJECT_NAME} SHARED
     # List C/C++ source files with relative paths to this CMakeLists.txt.
     app/sa_jni.cpp
+    app/sa_applogic.cpp
     app/shizuku_support.cpp
 #    lib/AndroidPackageSignatureHelper.cpp
 )

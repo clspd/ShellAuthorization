@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface ShellInterface extends Closeable {
-    void startup(String startupCommand) throws IOException;
+    void startup(String[] startupCommand, String templateName, String profileName) throws IOException;
 
     OutputStream getStdin();
 
