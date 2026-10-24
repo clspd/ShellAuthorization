@@ -15,8 +15,8 @@ android {
         applicationId = "top.clspd.shellauthorization"
         minSdk = 28
         targetSdk = 37
-        versionCode = 8
-        versionName = "0.0.0-alpha.8"
+        versionCode = 9
+        versionName = "0.0.0-alpha.9"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        externalNativeBuild {

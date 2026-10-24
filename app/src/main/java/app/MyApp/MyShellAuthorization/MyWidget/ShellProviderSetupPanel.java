@@ -26,7 +26,6 @@ public class ShellProviderSetupPanel {
     private final List<ShellProviderParameter> schema;
 
     private ViewGroup formHost;
-    private ViewGroup actionHost;
     private EditText friendlyNameInput;
     private Button saveButton;
     private SetupActionController actionController;
@@ -72,8 +71,8 @@ public class ShellProviderSetupPanel {
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
-        actionHost = new LinearLayout(ctx);
-        ((LinearLayout) actionHost).setOrientation(LinearLayout.VERTICAL);
+        LinearLayout actionHost = new LinearLayout(ctx);
+        actionHost.setOrientation(LinearLayout.VERTICAL);
         root.addView(actionHost);
 
         actionController = new SetupActionController(provider, actionHost,
@@ -153,8 +152,7 @@ public class ShellProviderSetupPanel {
         }
         String friendlyName = provider.getProviderFriendlyName();
         if (friendlyNameInput != null) {
-            String typed = friendlyNameInput.getText().toString().trim();
-            if (!typed.isEmpty()) friendlyName = typed;
+            if (!friendlyNameInput.getText().toString().isEmpty()) friendlyName = friendlyNameInput.getText().toString();
         }
         callback.onSave(provider.generateProviderIdentifier(), provider.getProviderName(),
                 friendlyName, provider);

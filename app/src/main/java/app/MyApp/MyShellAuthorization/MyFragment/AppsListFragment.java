@@ -243,7 +243,7 @@ public class AppsListFragment extends Fragment {
         boolean reverse = prefs.getBoolean(PREF_SORT_REVERSE, DEFAULT_SORT_REVERSE);
         boolean excludeSystem = prefs.getBoolean(PREF_EXCLUDE_SYSTEM, DEFAULT_EXCLUDE_SYSTEM);
         boolean excludeNonLaunchable = prefs.getBoolean(PREF_EXCLUDE_NON_LAUNCHABLE, DEFAULT_EXCLUDE_NON_LAUNCHABLE);
-        String query = filter.getText().toString().trim().toLowerCase(Locale.ROOT);
+        String query = filter.getText().toString().toLowerCase(Locale.ROOT);
 
         items.clear();
         for (AppItem item : allItems) {

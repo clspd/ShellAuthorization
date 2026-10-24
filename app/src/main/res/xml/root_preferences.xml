@@ -7,6 +7,13 @@
             app:title="@string/ignore_battery_optimization_title" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_user_profiles">
+        <Preference
+            app:key="manage_user_profiles"
+            app:summary="@string/manage_user_profiles_summary"
+            app:title="@string/manage_user_profiles_title" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/settings_privacy_and_security">
         <ListPreference
             app:defaultValue="decline"

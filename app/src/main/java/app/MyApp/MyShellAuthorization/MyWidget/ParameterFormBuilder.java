@@ -109,7 +109,7 @@ public class ParameterFormBuilder {
             if (p.isRequired()) {
                 Object v = values.get(p.getKey());
                 if (v == null) valid = false;
-                else if (v instanceof String && ((String) v).trim().isEmpty()) valid = false;
+                else if (v instanceof String && ((String) v).isEmpty()) valid = false;
             }
             if (input instanceof EditText) {
                 ((EditText) input).setError(valid ? null : "Required");
@@ -141,7 +141,7 @@ public class ParameterFormBuilder {
             if (input instanceof Switch) {
                 values.put(p.getKey(), ((Switch) input).isChecked());
             } else if (input instanceof EditText) {
-                String text = ((EditText) input).getText().toString().trim();
+                String text = ((EditText) input).getText().toString();
                 if (text.isEmpty()) {
                     values.put(p.getKey(), null);
                     continue;

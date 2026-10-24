@@ -63,6 +63,12 @@ public class MyPreferenceFragment extends PreferenceFragmentCompat {
                 return true;
             });
 
+            findPreference("manage_user_profiles").setOnPreferenceClickListener(preference -> {
+                startActivity(app.MyApp.MyCommon.MySupport.MyFragmentContainer.FragmentContainerActivity.createIntent(
+                        requireContext(), app.MyApp.MyShellAuthorization.MyFragment.ManageUserProfilesFragment.class, new Bundle()));
+                return true;
+            });
+
             findPreference("open_privacy_policy").setOnPreferenceClickListener(preference -> {
                 Intent intent = new Intent(requireContext(), LicenseViewerActivity.class);
                 intent.putExtra("identifier", R.raw.privacypolicy);
