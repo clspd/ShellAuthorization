@@ -1,10 +1,11 @@
-package top.clspd.shellauthorization.Public.ShellServer
+package top.clspd.shellauthorization.Shared.ShellServer
 
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import android.os.Parcel
 import android.util.Log
+import top.clspd.shellauthorization.Public.Client.ShellBinder
 
 object ShellRequestHandler {
 
@@ -16,14 +17,15 @@ object ShellRequestHandler {
         }
 
         val binder = intent.getBundleExtra("data")?.getBinder("binder") ?: return false
-//        val shizukuBinder = Shizuku.getBinder()
-//        if (shizukuBinder == null) {
-//            LOGGER.w("Binder not received or Shizuku service not running")
-//        }
+        val shellBinderInstance = ShellBinder()
+        val isBindSuccess = shellBinderInstance.bind(context, 5000)
+        if (!isBindSuccess) {
+            Log.e("ShellRequestHandler", "Binder not received");
+        }
 
         val data = Parcel.obtain()
         return try {
-//            data.writeStrongBinder(shizukuBinder)
+            if (isBindSuccess) data.writeStrongBinder(shellBinderInstance.binder)
             data.writeString(context.applicationInfo.sourceDir)
             binder.transact(1, data, null, IBinder.FLAG_ONEWAY)
             true

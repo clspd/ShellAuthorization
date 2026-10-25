@@ -60,6 +60,10 @@ android {
             useLegacyPackaging = true
         }
     }
+
+    buildFeatures {
+        aidl = true
+    }
 }
 
 dependencies {

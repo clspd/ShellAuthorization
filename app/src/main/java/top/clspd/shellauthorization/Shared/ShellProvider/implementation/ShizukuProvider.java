@@ -139,7 +139,7 @@ public class ShizukuProvider extends ProcessShellProvider {
             ApplicationInfo appInfo = pm.getApplicationInfo(DataHelper.getShizukuPackageName(), 0);
             String apk = appInfo.sourceDir;
             String dataDir = MyDataDirectory.get();
-            File shizuku_support = new File(dataDir, "shizuku_support");
+            File shizuku_support = new File(dataDir, "vendors/shizuku_support");
             if (!shizuku_support.exists() && !shizuku_support.mkdir()) {
                 throw new Exception("cannot mkdir");
             }

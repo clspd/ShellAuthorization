@@ -101,7 +101,11 @@
             android:label="@string/fragment_container2_label"
             android:theme="@style/Theme.Backdrop"
             android:windowSoftInputMode="adjustResize" />
-
+        <service
+            android:name=".Protected.ShellServer.ShellTransactionService"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedService" />
         <activity
             android:name=".Public.ShellServer.ShellRequestHandlerActivity"
             android:directBootAware="true"

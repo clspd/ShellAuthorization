@@ -1,12 +1,8 @@
 package top.clspd.shellauthorization.Public.ShellServer
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.content.Context
-import android.os.IBinder
-import android.os.Parcel
-import top.clspd.shellauthorization.Public.ShellServer.ShellRequestHandler
+import top.clspd.shellauthorization.Shared.ShellServer.ShellRequestHandler
 
 class ShellRequestHandlerActivity : AppCompatActivity() {
 

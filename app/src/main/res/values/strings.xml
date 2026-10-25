@@ -99,6 +99,15 @@
     <string name="fragment_application_detail_title">Application details</string>
     <string name="application_detail_name_with_uid">%1$s (%2$d)</string>
     <string name="application_detail_shared_packages_more">%1$s and %2$d more…</string>
+    <string name="application_detail_allowed_templates">Allowed Templates</string>
+    <string name="application_detail_no_templates">No templates available. Create one on the Templates page first.</string>
+    <string name="application_detail_allow_direct_commands">Allow Direct Commands</string>
+    <string name="application_detail_direct_commands_warning">Warning: Allowing direct commands may decrease the security! Make sure you trust the application.</string>
+    <string name="application_detail_prompt_before_direct_command">Prompt for consent before direct command</string>
+    <string name="application_detail_settings_save_failed">Cannot save the settings.</string>
+    <string name="application_detail_overlay_permission_message">The \"Prompt for consent before direct command\" option needs the \"Display over other apps\" permission so the consent dialog can be shown. Do you want to open the settings and grant it?</string>
+    <string name="permission_overlay_required_title">Overlay permission required</string>
+    <string name="permission_overlay_settings_unavailable">Cannot open the overlay permission settings.</string>
     <string name="apps_options">Options</string>
     <string name="apps_filter_hint">Filter by name, package or UID</string>
     <string name="apps_sort_by">Sort by</string>

@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <functional>
 #include <string>
+#include <set>
 #include <filesystem>
 #include <utility>
 #include <sys/wait.h>
@@ -149,7 +150,9 @@ int SetupDataDirectoryStructure(PCSTR lpszDataDirectory) {
     filesystem::path dataDir(lpszDataDirectory);
 
     int err = 0;
-    auto InitDir = [&err, &buf] (const filesystem::path& path) -> bool {
+    set<string> deprecated_paths;
+    auto InitDir = [&err, &buf, &deprecated_paths] (const filesystem::path& path) -> bool {
+        if (deprecated_paths.count(path)) return true;
         if (E_FAILED(stat(path.c_str(), &buf))) {
             if (errno != ENOENT) { err = errno; return false; }
             if (E_FAILED(mkdir(path.c_str(), 0700))) { err = errno; return false; }
@@ -160,6 +163,8 @@ int SetupDataDirectoryStructure(PCSTR lpszDataDirectory) {
 
     filesystem::path appDataDir = dataDir / APP_DATA_DIR_VER;
     if (!InitDir(appDataDir)) return err;
+
+    deprecated_paths.insert(appDataDir / TEMPORARILY_DATA);
 
     if (!InitDir(appDataDir / RECYCLE_BIN_NAME)) return err;
     if (!InitDir(appDataDir / TEMPORARILY_DATA)) return err;

@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import app.AppLogic.MainAppLogic.MyShellAuthorization.MyDataDirectory;
@@ -92,18 +93,90 @@ public final class UidAuthorizationStore {
     public boolean isAuthorized(int uid, long currentEarliestFirstInstallTime) {
         if (uid <= 0 || currentEarliestFirstInstallTime < 0) return false;
         synchronized (lock) {
-            File allow = allowFile(uid);
-            AllowDeclaration declaration = AllowDeclaration.read(allow);
-            if (declaration == null) {
-                if (allow.exists()) invalidateLocked(uid);
+            return readValidLocked(uid, currentEarliestFirstInstallTime) != null;
+        }
+    }
+
+    /**
+     * Reads the authorization of the UID after checking it against an already computed earliest
+     * firstInstallTime. Deletes the stored configuration when it no longer matches.
+     *
+     * @return null when the UID is not authorized.
+     */
+    public AllowDeclaration readValidAuthorization(int uid, long currentEarliestFirstInstallTime) {
+        if (uid <= 0 || currentEarliestFirstInstallTime < 0) return null;
+        synchronized (lock) {
+            return readValidLocked(uid, currentEarliestFirstInstallTime);
+        }
+    }
+
+    /**
+     * Recomputes the earliest firstInstallTime from the installed packages and reads the
+     * authorization.
+     *
+     * @return null when the UID is not authorized.
+     */
+    public AllowDeclaration readValidAuthorization(PackageManager pm, int uid) {
+        Long current = currentEarliestFirstInstallTime(pm, uid);
+        if (current == null) {
+            invalidate(uid);
+            return null;
+        }
+        return readValidAuthorization(uid, current);
+    }
+
+    /**
+     * Updates the per-application settings stored in an existing authorization. The UID and the
+     * recorded firstInstallTime are preserved.
+     *
+     * @return false when the UID is not authorized or the file cannot be written.
+     */
+    public boolean updateSettings(int uid, long currentEarliestFirstInstallTime,
+                                  List<String> allowedTemplates,
+                                  boolean allowDirectCommands,
+                                  CommandTemplate.Profile directCommandProfile,
+                                  boolean promptForConsentBeforeDirectCommand) {
+        if (uid <= 0 || currentEarliestFirstInstallTime < 0) return false;
+        synchronized (lock) {
+            AllowDeclaration declaration = readValidLocked(uid, currentEarliestFirstInstallTime);
+            if (declaration == null) return false;
+            if (!ensureDirectory(allowlistDir)) return false;
+
+            declaration.allowedTemplates = allowedTemplates == null
+                    ? new ArrayList<>() : new ArrayList<>(allowedTemplates);
+            declaration.allowDirectCommands = allowDirectCommands;
+            declaration.directCommandProfile = directCommandProfile == null
+                    ? new CommandTemplate.Profile() : directCommandProfile.copy();
+            declaration.promptForConsentBeforeDirectCommand = promptForConsentBeforeDirectCommand;
+            declaration.normalize();
+
+            try {
+                declaration.write(allowFile(uid));
+            } catch (IOException e) {
                 return false;
             }
-            if (!declaration.isStillValidFor(uid, currentEarliestFirstInstallTime)) {
-                invalidateLocked(uid);
-                return false;
-            }
+            // An old recycled copy must not be restored later.
+            File recycled = recycledFile(uid);
+            if (recycled.exists()) recycled.delete();
             return true;
         }
+    }
+
+    /**
+     * Recomputes the earliest firstInstallTime and updates the per-application settings.
+     */
+    public boolean updateSettings(PackageManager pm, int uid,
+                                  List<String> allowedTemplates,
+                                  boolean allowDirectCommands,
+                                  CommandTemplate.Profile directCommandProfile,
+                                  boolean promptForConsentBeforeDirectCommand) {
+        Long current = currentEarliestFirstInstallTime(pm, uid);
+        if (current == null) {
+            invalidate(uid);
+            return false;
+        }
+        return updateSettings(uid, current, allowedTemplates, allowDirectCommands,
+                directCommandProfile, promptForConsentBeforeDirectCommand);
     }
 
     /**
@@ -184,6 +257,25 @@ public final class UidAuthorizationStore {
         List<PackageInfo> packages = UidPackages.packagesForUid(pm, uid);
         if (packages == null || packages.isEmpty()) return null;
         return UidPackages.earliestFirstInstallTime(packages);
+    }
+
+    /**
+     * Reads a declaration and deletes it when it is unreadable or no longer matches the UID.
+     * Callers must hold {@link #lock}.
+     */
+    private AllowDeclaration readValidLocked(int uid, long currentEarliestFirstInstallTime) {
+        File allow = allowFile(uid);
+        AllowDeclaration declaration = AllowDeclaration.read(allow);
+        if (declaration == null) {
+            if (allow.exists()) invalidateLocked(uid);
+            return null;
+        }
+        if (!declaration.isStillValidFor(uid, currentEarliestFirstInstallTime)) {
+            invalidateLocked(uid);
+            return null;
+        }
+        declaration.normalize();
+        return declaration;
     }
 
     private void invalidate(int uid) {
