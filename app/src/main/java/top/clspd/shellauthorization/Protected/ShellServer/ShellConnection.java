@@ -1,21 +1,25 @@
 package top.clspd.shellauthorization.Protected.ShellServer;
 
+import android.content.Context;
 import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.util.Pair;
 
 import java.io.IOException;
 
+import app.MyApp.MyShellAuthorization.MyDataStructures.UidAuthorizationStore;
 import top.clspd.shellauthorization.Shared.ShellProvider.intf.ShellProviderInterface;
 
 public class ShellConnection {
+    private Context context;
     private final int uid;
     private final IBinder client;
 
     private ShellProviderInterface shell;
 
-    public ShellConnection(int uid1, IBinder client) {
-        uid = uid1;
+    public ShellConnection(Context context, int uid, IBinder client) {
+        this.context = context;
+        this.uid = uid;
         this.client = client;
     }
 
@@ -26,7 +30,13 @@ public class ShellConnection {
     public Pair<Boolean, String> start(String templateName, String[] args, ParcelFileDescriptor parcelFileDescriptor) {
         // TODO: query app allowance, query template, determine which provider to use, ...
 
-        new Thread(() -> {
+        // query app allowance
+        UidAuthorizationStore store = UidAuthorizationStore.get();
+        if (!store.isAuthorized(context.getPackageManager(), getUid())) {
+            return new Pair<Boolean, String>(false, "Internal error occurred"); // hide detailed error message for unauthorized applications
+        }
+
+        if (false) new Thread(() -> {
             try (
                     ParcelFileDescriptor socket = parcelFileDescriptor;
                     java.io.InputStream in = new ParcelFileDescriptor.AutoCloseInputStream(socket);

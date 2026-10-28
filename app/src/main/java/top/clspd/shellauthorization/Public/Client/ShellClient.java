@@ -33,4 +33,8 @@ public class ShellClient {
             reply.recycle();
         }
     }
+
+    public boolean start() {
+        return false;
+    }
 }

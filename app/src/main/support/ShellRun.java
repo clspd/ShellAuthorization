@@ -34,6 +34,9 @@ public class ShellRun {
     private static String[] args;
     private static Handler handler;
 
+    private static final Runnable binderTimeout =
+            () -> abort(new TimeoutException("Timeout").toString());
+
     private static final Binder binder = new Binder() {
 
         @Override
@@ -44,6 +47,7 @@ public class ShellRun {
                 String sourceDir = data.readString();
                 if (binder != null && sourceDir != null) {
                     handler.post(() -> {
+                        handler.removeCallbacks(binderTimeout);
                         try {
                             onBinderReceived(binder, sourceDir);
                         } catch (Exception e) {
@@ -76,7 +80,7 @@ public class ShellRun {
 
         requestBinder();
 
-        handler.postDelayed(() -> abort(new TimeoutException("Timeout").toString()), 5000);
+        handler.postDelayed(binderTimeout, 5000);
 
         Looper.loop();
 

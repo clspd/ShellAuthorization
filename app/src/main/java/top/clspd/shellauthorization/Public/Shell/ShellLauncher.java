@@ -42,7 +42,7 @@ public class ShellLauncher {
             return 1;
         }
 
-        // 2. authorization
+        // 2. launch
 
 
         return 0;

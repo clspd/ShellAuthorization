@@ -18,7 +18,7 @@ object ShellRequestHandler {
 
         val binder = intent.getBundleExtra("data")?.getBinder("binder") ?: return false
         val shellBinderInstance = ShellBinder()
-        val isBindSuccess = shellBinderInstance.bind(context, 5000)
+        val isBindSuccess = shellBinderInstance.bind(context.applicationContext, 4000)
         if (!isBindSuccess) {
             Log.e("ShellRequestHandler", "Binder not received");
         }

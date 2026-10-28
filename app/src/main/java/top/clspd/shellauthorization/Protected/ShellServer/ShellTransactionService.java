@@ -61,7 +61,7 @@ public class ShellTransactionService extends Service {
                     }
                     return true;
                 }
-                ShellConnection conn = new ShellConnection(Binder.getCallingUid(), clientBinder);
+                ShellConnection conn = new ShellConnection(getApplicationContext(), Binder.getCallingUid(), clientBinder);
                 clientSessionMap.put(clientBinder, conn);
                 try {
                     clientBinder.linkToDeath(() -> clientSessionMap.remove(clientBinder), 0);
@@ -82,13 +82,13 @@ public class ShellTransactionService extends Service {
                 if (reply != null) {
                     reply.writeInt(result.first ? 0 : 1);
                     reply.writeString(result.second);
-                }
-                if (result.first) {
-                    reply.writeNoException();
-                    reply.writeTypedObject(
-                            clientSide,
-                            Parcelable.PARCELABLE_WRITE_RETURN_VALUE
-                    );
+                    if (result.first) {
+                        reply.writeNoException();
+                        reply.writeTypedObject(
+                                clientSide,
+                                Parcelable.PARCELABLE_WRITE_RETURN_VALUE
+                        );
+                    }
                 }
                 return true;
             }

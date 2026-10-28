@@ -7,8 +7,6 @@ public final class ShellTransactionConstants {
 
     public static final int CODE_PING = IBinder.FIRST_CALL_TRANSACTION + 1;
     public static final int CODE_START = IBinder.FIRST_CALL_TRANSACTION + 2;
-    // public static final int CODE_SEND_STANDARD_INPUT = IBinder.FIRST_CALL_TRANSACTION + 3;
-    // public static final int CODE_SEND_OUTPUT = IBinder.FIRST_CALL_TRANSACTION + 4;
 
     public static final String INTERFACE_NAME = "top.clspd.shellauthorization.Protected.ShellServer.ShellTransactionService.V_1";
 }
